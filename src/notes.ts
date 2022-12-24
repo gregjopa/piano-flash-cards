@@ -44,11 +44,7 @@ export function getBeginnerNotes(): Note[] {
 }
 
 export function getIntermediateNotes(): Note[] {
-  const noteNames = Object.values(NoteName).filter((noteName) => {
-    return (
-      noteName.includes("##") === false && noteName.includes("bb") === false
-    );
-  });
+  const noteNames = Object.values(NoteName);
 
   // F Major has 1 flat and G Major has 1 sharp
   const keySignatures = [KeySignature.C, KeySignature.F, KeySignature.G];
