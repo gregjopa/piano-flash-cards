@@ -1,6 +1,7 @@
 {
   "name": "piano-flash-cards",
   "version": "0.1.0",
+  "homepage": "https://gregjopa.github.io/piano-flash-cards",
   "author": "Greg Jopa <grjopa@gmail.com>",
   "license": "MIT",
   "private": true,
@@ -24,7 +25,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -45,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "gh-pages": "^4.0.0",
     "prettier": "^2.8.1"
   }
 }
