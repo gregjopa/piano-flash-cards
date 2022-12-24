@@ -40,8 +40,6 @@ export function getBeginnerNotes(): Note[] {
     );
   });
 
-  console.log("notes", notes);
-
   return notes;
 }
 
@@ -61,14 +59,6 @@ export function getIntermediateNotes(): Note[] {
     },
     {
       octave: Octave.Three,
-      clef: Clef.Bass,
-    },
-    {
-      octave: Octave.Three,
-      clef: Clef.Treble,
-    },
-    {
-      octave: Octave.Four,
       clef: Clef.Bass,
     },
     {
