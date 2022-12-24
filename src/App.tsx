@@ -68,6 +68,7 @@ function App() {
     setCountOfCorrectGuesses(0);
     setRemainingBeginnerNotes(getBeginnerNotes());
     setRemainingIntermediateNotes(getIntermediateNotes());
+    setDifficultyLevel(DifficultyLevel.Beginner);
     getNextNote();
   }
 
