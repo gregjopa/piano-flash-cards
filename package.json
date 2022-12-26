@@ -37,9 +37,7 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+      "defaults and supports es6"
     ],
     "development": [
       "last 1 chrome version",

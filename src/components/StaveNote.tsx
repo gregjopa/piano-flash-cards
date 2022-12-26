@@ -64,8 +64,13 @@ function draw(
     }),
   ];
 
-  const voice = new VF.Voice().addTickables(notes);
-  Vex.Flow.Accidental.applyAccidentals([voice], keySignature);
+  const voice = new VF.Voice({ num_beats: 1, beat_value: 4 })
+    .setStrict(false)
+    .addTickables(notes);
 
-  Vex.Flow.Formatter.FormatAndDraw(context, stave, notes);
+  VF.Accidental.applyAccidentals([voice], keySignature);
+
+  new VF.Formatter().joinVoices([voice]).format([voice], scaledWidth / 2);
+
+  voice.draw(context, stave);
 }
