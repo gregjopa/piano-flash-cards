@@ -33,6 +33,14 @@ function App() {
   );
 
   useEffect(() => {
+    // check to see if its time to advance to the next difficulty level
+    if (
+      difficultyLevel === DifficultyLevel.Beginner &&
+      remainingBeginnerNotes.length === 0
+    ) {
+      return setDifficultyLevel(DifficultyLevel.Intermediate);
+    }
+
     if (gameState === GameState.GetNextNote) {
       setGuessedNoteName("");
       let newNote;
@@ -46,22 +54,12 @@ function App() {
     }
 
     function getNextRandomNote(): Note {
-      let localDifficultyLevel = difficultyLevel;
-
-      if (
-        localDifficultyLevel === DifficultyLevel.Beginner &&
-        remainingBeginnerNotes.length === 0
-      ) {
-        setDifficultyLevel(DifficultyLevel.Intermediate);
-        localDifficultyLevel = DifficultyLevel.Intermediate;
-      }
-
       const remainingNotes =
-        localDifficultyLevel === DifficultyLevel.Beginner
+        difficultyLevel === DifficultyLevel.Beginner
           ? remainingBeginnerNotes
           : remainingIntermediateNotes;
       const setRemainingNotes =
-        localDifficultyLevel === DifficultyLevel.Beginner
+        difficultyLevel === DifficultyLevel.Beginner
           ? setRemainingBeginnerNotes
           : setRemainingIntermediateNotes;
 
