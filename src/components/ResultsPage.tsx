@@ -21,7 +21,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
   function DisplayActualNote() {
     const { noteName, octave, keySignature } = actualNote;
     return (
-      <table className="border-collapse table-auto w-full my-8 text-center">
+      <table className="border-collapse table-auto w-full mt-6 mb-2 text-center">
         <thead>
           <tr>
             <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-3">
@@ -60,24 +60,24 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
             type={AlertType.Success}
             text="Congrats! You completed the game"
           />
-          <DisplayActualNote />
           <Button onClick={onStartOver} text="Start Over" />
+          <DisplayActualNote />
         </>
       );
     case GameState.CorrectGuess:
       return (
         <>
           <Alert type={AlertType.Success} text="Correct Guess!" />
-          <DisplayActualNote />
           <Button onClick={onNextNote} text="Next Note" />
+          <DisplayActualNote />
         </>
       );
     case GameState.IncorrectGuess:
       return (
         <>
           <Alert type={AlertType.Danger} text="Incorrect Guess" />
-          <DisplayActualNote />
           <Button onClick={onStartOver} text="Start Over" />
+          <DisplayActualNote />
         </>
       );
     default:

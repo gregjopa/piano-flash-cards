@@ -13,7 +13,7 @@ export const StaveNote: React.FC<StaveNoteProps> = ({ note }) => {
       if (node !== null) {
         const nodeWidth = node.getBoundingClientRect().width;
         const width = nodeWidth > 300 ? nodeWidth : 300;
-        draw(node, { note, width, height: 300 });
+        draw(node, { note, width, height: 250 });
       }
     },
     [note]
@@ -39,7 +39,7 @@ function draw(
   const context = renderer.getContext();
 
   const scaledWidth = width / 2;
-  const stave = new VF.Stave(0, 10, scaledWidth - 1);
+  const stave = new VF.Stave(0, 0, scaledWidth - 1);
 
   const { clef, octave, keySignature, noteName } = note;
 

@@ -104,9 +104,9 @@ function App() {
   return (
     <div
       className="
-      h-full max-w-2xl mx-auto px-8 pb-8
-      bg-slate-50
-     md:border-solid md:border-x md:border-b md:border-gray-500"
+        h-full max-w-2xl mx-auto px-8 pb-8
+        bg-slate-50
+        md:border-solid md:border-x md:border-b md:border-gray-500"
     >
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
