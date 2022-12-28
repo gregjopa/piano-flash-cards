@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/piano-flash-cards/static/css/main.ef7bc2a0.css",
-    "main.js": "/piano-flash-cards/static/js/main.f85607b1.js",
+    "main.css": "/piano-flash-cards/static/css/main.8ad191b4.css",
+    "main.js": "/piano-flash-cards/static/js/main.3839d95b.js",
     "static/js/787.c2a95903.chunk.js": "/piano-flash-cards/static/js/787.c2a95903.chunk.js",
     "index.html": "/piano-flash-cards/index.html",
-    "main.ef7bc2a0.css.map": "/piano-flash-cards/static/css/main.ef7bc2a0.css.map",
-    "main.f85607b1.js.map": "/piano-flash-cards/static/js/main.f85607b1.js.map",
+    "main.8ad191b4.css.map": "/piano-flash-cards/static/css/main.8ad191b4.css.map",
+    "main.3839d95b.js.map": "/piano-flash-cards/static/js/main.3839d95b.js.map",
     "787.c2a95903.chunk.js.map": "/piano-flash-cards/static/js/787.c2a95903.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ef7bc2a0.css",
-    "static/js/main.f85607b1.js"
+    "static/css/main.8ad191b4.css",
+    "static/js/main.3839d95b.js"
   ]
 }
