@@ -9,6 +9,8 @@ import {
   defaultNote,
   Note,
 } from "./notes";
+
+import { Header } from "./components/Header";
 import { NoteSelector } from "./components/NoteSelector";
 import { StaveNote } from "./components/StaveNote";
 import { ResultsPage } from "./components/ResultsPage";
@@ -100,21 +102,28 @@ function App() {
   }
 
   return (
-    <div className="app-container">
-      <header className="header">
-        <h1>Piano Flash Cards</h1>
-      </header>
+    <div
+      className="
+      h-full max-w-2xl mx-auto px-8 pb-8
+      bg-slate-50
+     md:border-solid md:border-x md:border-b md:border-gray-500"
+    >
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onError={() => setGameState(GameState.Error)}
         onReset={startOver}
       >
+        <Header />
         <NoteSelector
           selectedNote={guessedNoteName}
           onNoteNameChange={handleGuess}
           isDisabled={Boolean(guessedNoteName)}
+          shouldFocus={
+            gameState === GameState.WaitingForGuess ||
+            gameState === GameState.NotStarted
+          }
         />
-        <StaveNote note={actualNote} width={400} height={300} />
+        <StaveNote note={actualNote} />
         <div>Score: {countOfCorrectGuesses}</div>
 
         <ResultsPage

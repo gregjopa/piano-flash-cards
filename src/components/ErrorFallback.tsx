@@ -1,3 +1,5 @@
+import React from "react";
+
 type FallbackProps = {
   error: Error;
   resetErrorBoundary: (...args: Array<unknown>) => void;
