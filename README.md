@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+# Piano Flash Cards React App
+
+![piano flash card app screenshot](images/piano-flash-cards-app-screenshot.jpg)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
