@@ -5,37 +5,30 @@ import type { Note } from "../notes";
 
 type StaveNoteProps = {
   note: Note;
-  width: number;
-  height: number;
 };
 
-export const StaveNote: React.FC<StaveNoteProps> = ({
-  note,
-  width,
-  height,
-}) => {
+export const StaveNote: React.FC<StaveNoteProps> = ({ note }) => {
   const vexflowRef = useCallback(
     (node: HTMLDivElement) => {
       if (node !== null) {
-        draw(node, { note, width, height });
+        const nodeWidth = node.getBoundingClientRect().width;
+        const width = nodeWidth > 300 ? nodeWidth : 300;
+        draw(node, { note, width, height: 300 });
       }
     },
-    [note, width, height]
+    [note]
   );
 
   return (
-    <div style={{ width: "100%", overflowX: "auto" }}>
-      <div
-        style={{ backgroundColor: "whitesmoke", display: "inline-block" }}
-        ref={vexflowRef}
-      />
+    <div className="w-full overflow-x-auto">
+      <div ref={vexflowRef} />
     </div>
   );
 };
 
 function draw(
   container: HTMLDivElement,
-  { note, width, height }: StaveNoteProps
+  { note, width, height }: { note: Note; width: number; height: number }
 ) {
   const VF = Vex.Flow;
   container.innerHTML = "";
@@ -46,7 +39,7 @@ function draw(
   const context = renderer.getContext();
 
   const scaledWidth = width / 2;
-  const stave = new VF.Stave(10, 10, scaledWidth - 20);
+  const stave = new VF.Stave(0, 10, scaledWidth - 1);
 
   const { clef, octave, keySignature, noteName } = note;
 

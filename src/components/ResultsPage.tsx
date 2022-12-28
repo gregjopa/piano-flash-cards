@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Alert, AlertType } from "./Alert";
+import { Button } from "./Button";
 import { GameState } from "../constants";
 import type { Note } from "../notes";
 
@@ -19,11 +21,34 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
   function DisplayActualNote() {
     const { noteName, octave, keySignature } = actualNote;
     return (
-      <>
-        <div>Note Name: {noteName}</div>
-        <div>Octave: {octave}</div>
-        <div>Key Signature: {keySignature}</div>
-      </>
+      <table className="border-collapse table-auto w-full my-8 text-center">
+        <thead>
+          <tr>
+            <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-3">
+              Note Name
+            </th>
+            <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-3">
+              Octave
+            </th>
+            <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-3">
+              Key Signature
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8">
+              {noteName}
+            </td>
+            <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8">
+              {octave}
+            </td>
+            <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8">
+              {keySignature}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     );
   }
 
@@ -31,25 +56,28 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
     case GameState.Finished:
       return (
         <>
-          <div>Congrats! You completed the game</div>
+          <Alert
+            type={AlertType.Success}
+            text="Congrats! You completed the game"
+          />
           <DisplayActualNote />
-          <button onClick={onStartOver}>Start Over</button>
+          <Button onClick={onStartOver} text="Start Over" />
         </>
       );
     case GameState.CorrectGuess:
       return (
         <>
-          <div>Correct Guess!</div>
+          <Alert type={AlertType.Success} text="Correct Guess!" />
           <DisplayActualNote />
-          <button onClick={onNextNote}>Next Note</button>
+          <Button onClick={onNextNote} text="Next Note" />
         </>
       );
     case GameState.IncorrectGuess:
       return (
         <>
-          <div>Incorrect Guess</div>
+          <Alert type={AlertType.Danger} text="Incorrect Guess" />
           <DisplayActualNote />
-          <button onClick={onStartOver}>Start Over</button>
+          <Button onClick={onStartOver} text="Start Over" />
         </>
       );
     default:
