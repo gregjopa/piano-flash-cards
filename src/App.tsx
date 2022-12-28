@@ -108,12 +108,12 @@ function App() {
         bg-slate-50
         md:border-solid md:border-x md:border-b md:border-gray-500"
     >
+      <Header />
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onError={() => setGameState(GameState.Error)}
         onReset={startOver}
       >
-        <Header />
         <NoteSelector
           selectedNote={guessedNoteName}
           onNoteNameChange={handleGuess}

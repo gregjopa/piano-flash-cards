@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Alert, AlertType } from "./Alert";
+import { Button } from "./Button";
 type FallbackProps = {
   error: Error;
   resetErrorBoundary: (...args: Array<unknown>) => void;
@@ -10,10 +12,11 @@ export const ErrorFallback: React.FC<FallbackProps> = ({
   resetErrorBoundary,
 }) => {
   return (
-    <div role="alert">
-      <p>Something went wrong:</p>
-      <pre>{error.message}</pre>
-      <button onClick={resetErrorBoundary}>Try again</button>
-    </div>
+    <>
+      <Alert type={AlertType.Danger} title="Something went wrong">
+        {error.message}
+      </Alert>
+      <Button onClick={resetErrorBoundary}>Try Again</Button>
+    </>
   );
 };

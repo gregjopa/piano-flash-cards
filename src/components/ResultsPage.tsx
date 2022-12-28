@@ -58,25 +58,25 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
         <>
           <Alert
             type={AlertType.Success}
-            text="Congrats! You completed the game"
+            title="Congrats! You completed the game"
           />
-          <Button onClick={onStartOver} text="Start Over" />
+          <Button onClick={onStartOver}>Start Over</Button>
           <DisplayActualNote />
         </>
       );
     case GameState.CorrectGuess:
       return (
         <>
-          <Alert type={AlertType.Success} text="Correct Guess!" />
-          <Button onClick={onNextNote} text="Next Note" />
+          <Alert type={AlertType.Success} title="Correct Guess!" />
+          <Button onClick={onNextNote}>Next Note</Button>
           <DisplayActualNote />
         </>
       );
     case GameState.IncorrectGuess:
       return (
         <>
-          <Alert type={AlertType.Danger} text="Incorrect Guess" />
-          <Button onClick={onStartOver} text="Start Over" />
+          <Alert type={AlertType.Danger} title="Incorrect Guess" />
+          <Button onClick={onStartOver}>Start Over</Button>
           <DisplayActualNote />
         </>
       );
