@@ -1,3 +1,5 @@
+import { KeyManager } from "vexflow";
+
 import { NoteName, Clef, KeySignature, Octave } from "./constants";
 
 export type Note = {
@@ -15,9 +17,16 @@ export const defaultNote = {
 } as Note;
 
 export function getBeginnerNotes(): Note[] {
-  const noteNames = Object.values(NoteName).filter((noteName) => {
-    return noteName.includes("#") === false && noteName.includes("b") === false;
-  });
+  // use C for beginner notes
+  const keySignature = KeySignature.C;
+
+  const noteNames = getNoteNamesForKeySignature(keySignature).filter(
+    (noteName) => {
+      return (
+        noteName.includes("#") === false && noteName.includes("b") === false
+      );
+    }
+  );
 
   const octaves = [Octave.Four];
   let notes: Note[] = [];
@@ -27,8 +36,8 @@ export function getBeginnerNotes(): Note[] {
       notes.push({
         noteName,
         octave,
+        keySignature,
         clef: Clef.Treble,
-        keySignature: KeySignature.C,
       });
     }
   }
@@ -44,8 +53,6 @@ export function getBeginnerNotes(): Note[] {
 }
 
 export function getIntermediateNotes(): Note[] {
-  const noteNames = Object.values(NoteName);
-
   // F Major has 1 flat and G Major has 1 sharp
   const keySignatures = [KeySignature.C, KeySignature.F, KeySignature.G];
   const octavesWithClef = [
@@ -69,6 +76,8 @@ export function getIntermediateNotes(): Note[] {
   const notes: Note[] = [];
 
   for (const keySignature of keySignatures) {
+    const noteNames = getNoteNamesForKeySignature(keySignature);
+
     for (const { octave, clef } of octavesWithClef) {
       for (const noteName of noteNames) {
         notes.push({
@@ -92,4 +101,21 @@ export function pickRandomItemFromArray<Type>(array: Type[]): {
     value: array[index],
     index,
   };
+}
+
+function getNoteNamesForKeySignature(keySignature: KeySignature): NoteName[] {
+  // prevent duplicate note names
+  const uniqueNoteNames = new Set<NoteName>();
+
+  // get the correct note name using Vexflow's KeyManager class
+  const keyManager = new KeyManager(keySignature);
+
+  Object.values(NoteName).forEach((noteName) => {
+    const adjustedNoteNameLowerCase = keyManager.selectNote(noteName).note;
+    const adjustedNoteName = (adjustedNoteNameLowerCase[0].toUpperCase() +
+      adjustedNoteNameLowerCase.slice(1)) as NoteName;
+    uniqueNoteNames.add(adjustedNoteName);
+  });
+
+  return Array.from(uniqueNoteNames);
 }
