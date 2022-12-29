@@ -2,6 +2,7 @@ import React from "react";
 
 import { Alert, AlertType } from "./Alert";
 import { Button } from "./Button";
+import { PianoKeyboard } from "./PianoKeyboard";
 import { GameState } from "../constants";
 import type { Note } from "../notes";
 
@@ -70,6 +71,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
           <Alert type={AlertType.Success} title="Correct Guess!" />
           <Button onClick={onNextNote}>Next Note</Button>
           <DisplayActualNote />
+          <PianoKeyboard activeNote={actualNote} />
         </>
       );
     case GameState.IncorrectGuess:
@@ -78,6 +80,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
           <Alert type={AlertType.Danger} title="Incorrect Guess" />
           <Button onClick={onStartOver}>Start Over</Button>
           <DisplayActualNote />
+          <PianoKeyboard activeNote={actualNote} />
         </>
       );
     default:

@@ -16,6 +16,24 @@ export const defaultNote = {
   keySignature: KeySignature.C,
 } as Note;
 
+// TODO: figure out how to limit to only 12 notes per octave/keySignature
+export function getNoteNamesForKeySignature(keySignature: KeySignature): NoteName[] {
+  // prevent duplicate note names
+  const uniqueNoteNames = new Set<NoteName>();
+
+  // get the correct note name using Vexflow's KeyManager class
+  const keyManager = new KeyManager(keySignature);
+
+  Object.values(NoteName).forEach((noteName) => {
+    const adjustedNoteNameLowerCase = keyManager.selectNote(noteName).note;
+    const adjustedNoteName = (adjustedNoteNameLowerCase[0].toUpperCase() +
+      adjustedNoteNameLowerCase.slice(1)) as NoteName;
+    uniqueNoteNames.add(adjustedNoteName);
+  });
+
+  return Array.from(uniqueNoteNames);
+}
+
 const keySignatureNotes = Object.values(KeySignature).reduce(
   (accumulator, keySignature) => {
     return {
@@ -109,19 +127,3 @@ export function pickRandomItemFromArray<Type>(array: Type[]): {
   };
 }
 
-function getNoteNamesForKeySignature(keySignature: KeySignature): NoteName[] {
-  // prevent duplicate note names
-  const uniqueNoteNames = new Set<NoteName>();
-
-  // get the correct note name using Vexflow's KeyManager class
-  const keyManager = new KeyManager(keySignature);
-
-  Object.values(NoteName).forEach((noteName) => {
-    const adjustedNoteNameLowerCase = keyManager.selectNote(noteName).note;
-    const adjustedNoteName = (adjustedNoteNameLowerCase[0].toUpperCase() +
-      adjustedNoteNameLowerCase.slice(1)) as NoteName;
-    uniqueNoteNames.add(adjustedNoteName);
-  });
-
-  return Array.from(uniqueNoteNames);
-}
