@@ -16,17 +16,23 @@ export const defaultNote = {
   keySignature: KeySignature.C,
 } as Note;
 
+const keySignatureNotes = Object.values(KeySignature).reduce(
+  (accumulator, keySignature) => {
+    return {
+      ...accumulator,
+      ...{ [keySignature]: getNoteNamesForKeySignature(keySignature) },
+    };
+  },
+  {} as { [key in keyof typeof KeySignature]: NoteName[] }
+);
+
 export function getBeginnerNotes(): Note[] {
   // use C for beginner notes
   const keySignature = KeySignature.C;
 
-  const noteNames = getNoteNamesForKeySignature(keySignature).filter(
-    (noteName) => {
-      return (
-        noteName.includes("#") === false && noteName.includes("b") === false
-      );
-    }
-  );
+  const noteNames = keySignatureNotes[keySignature].filter((noteName) => {
+    return noteName.includes("#") === false && noteName.includes("b") === false;
+  });
 
   const octaves = [Octave.Four];
   let notes: Note[] = [];
@@ -76,7 +82,7 @@ export function getIntermediateNotes(): Note[] {
   const notes: Note[] = [];
 
   for (const keySignature of keySignatures) {
-    const noteNames = getNoteNamesForKeySignature(keySignature);
+    const noteNames = keySignatureNotes[keySignature];
 
     for (const { octave, clef } of octavesWithClef) {
       for (const noteName of noteNames) {
