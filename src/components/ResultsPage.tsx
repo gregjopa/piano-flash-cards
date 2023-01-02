@@ -21,34 +21,30 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
 }) => {
   function DisplayActualNote() {
     const { noteName, octave, keySignature } = actualNote;
-    const keySignatureWithLabel = keySignature.includes('m') ? `${keySignature.replace('m', '')} Minor` : `${keySignature} Major`
+    const keySignatureWithLabel = keySignature.includes("m")
+      ? `${keySignature.replace("m", "")} Minor`
+      : `${keySignature} Major`;
 
     return (
       <table className="border-collapse table-auto w-full mt-6 mb-2 text-center">
         <thead>
           <tr>
-            <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-3">
-              Note Name
+            <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-2">
+              Note
             </th>
-            <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-3">
+            <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-2">
               Octave
             </th>
-            <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-3">
-              Key Signature
+            <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-2">
+              Key
             </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8">
-              {noteName}
-            </td>
-            <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8">
-              {octave}
-            </td>
-            <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8">
-              {keySignatureWithLabel}
-            </td>
+            <td className="py-2 pl-8 pr-4">{noteName}</td>
+            <td className="py-2 pl-8 pr-4">{octave}</td>
+            <td className="py-2 pl-8 pr-4">{keySignatureWithLabel}</td>
           </tr>
         </tbody>
       </table>
