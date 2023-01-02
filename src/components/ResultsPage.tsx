@@ -21,6 +21,8 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
 }) => {
   function DisplayActualNote() {
     const { noteName, octave, keySignature } = actualNote;
+    const keySignatureWithLabel = keySignature.includes('m') ? `${keySignature.replace('m', '')} Minor` : `${keySignature} Major`
+
     return (
       <table className="border-collapse table-auto w-full mt-6 mb-2 text-center">
         <thead>
@@ -45,7 +47,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
               {octave}
             </td>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8">
-              {keySignature}
+              {keySignatureWithLabel}
             </td>
           </tr>
         </tbody>
