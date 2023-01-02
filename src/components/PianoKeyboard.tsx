@@ -1,8 +1,6 @@
 import React from "react";
-import { Music, KeyManager } from "vexflow";
 
-import { NoteName } from "../constants";
-import type { Note } from "../notes";
+import { keySignatureNotes, Note } from "../notes";
 
 type PianoKeyboardProps = {
   activeNote: Note;
@@ -30,27 +28,12 @@ export const PianoKeyboard: React.FC<PianoKeyboardProps> = ({ activeNote }) => {
     { noteIndex: 11, color: "white", offset: true },
   ];
 
-  const music = new Music();
-  const keyManager = new KeyManager(keySignature);
+  const scaleNotes = keySignatureNotes[keySignature];
 
-  const { root, accidental = '' } = music.getKeyParts(keySignature);
-  const rootNoteIndex = music.getNoteValue(`${root}${accidental}`);
-
-  const keysForOneOctaveWithRootFirst = [
-    ...keysForOneOctave.slice(rootNoteIndex, keysForOneOctave.length),
-    ...keysForOneOctave.slice(0, rootNoteIndex),
-  ];
-
-  const keysWithNames = keysForOneOctaveWithRootFirst.map(({ noteIndex, color, offset }) => {
-    const canonicalNoteName = music.getCanonicalNoteName(noteIndex);
-    const adjustedNoteNameLowerCase =
-      keyManager.selectNote(canonicalNoteName).note;
-    let adjustedNoteName = (adjustedNoteNameLowerCase[0].toUpperCase() +
-      adjustedNoteNameLowerCase.slice(1)) as NoteName;
-
-    const isActiveNote = noteName === adjustedNoteName;
-
-    // TODO: figure out how to add both note names to the black keys
+  const keysWithNames = keysForOneOctave.map(({ noteIndex, color, offset }) => {
+    const scaleNote = scaleNotes.find(({ tone }) => tone === noteIndex);
+    const scaleNoteName = scaleNote ? scaleNote.noteName : null;
+    const isActiveNote = noteName === scaleNoteName;
 
     return (
       <li
@@ -63,7 +46,7 @@ export const PianoKeyboard: React.FC<PianoKeyboardProps> = ({ activeNote }) => {
         }`}
         key={noteIndex}
       >
-        {adjustedNoteName}
+        {scaleNoteName}
       </li>
     );
   });

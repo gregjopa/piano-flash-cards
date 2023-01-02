@@ -1,4 +1,4 @@
-import { KeyManager } from "vexflow";
+import { KeyManager, Music } from "vexflow";
 
 import { NoteName, Clef, KeySignature, Octave } from "./constants";
 
@@ -16,47 +16,54 @@ export const defaultNote = {
   keySignature: KeySignature.C,
 } as Note;
 
-// TODO: figure out how to limit to only 12 notes per octave/keySignature
-export function getNoteNamesForKeySignature(keySignature: KeySignature): NoteName[] {
-  // prevent duplicate note names
-  const uniqueNoteNames = new Set<NoteName>();
+type ScaleNote = {
+  noteName: NoteName;
+  tone: number;
+};
 
-  // get the correct note name using Vexflow's KeyManager class
+export function getScaleNotesForKeySignature(
+  keySignature: KeySignature
+): ScaleNote[] {
+  const music = new Music();
   const keyManager = new KeyManager(keySignature);
 
-  Object.values(NoteName).forEach((noteName) => {
-    const adjustedNoteNameLowerCase = keyManager.selectNote(noteName).note;
-    const adjustedNoteName = (adjustedNoteNameLowerCase[0].toUpperCase() +
-      adjustedNoteNameLowerCase.slice(1)) as NoteName;
-    uniqueNoteNames.add(adjustedNoteName);
+  const { root, accidental = "", type } = music.getKeyParts(keySignature);
+  const rootNoteIndex = music.getNoteValue(`${root}${accidental}`);
+  const scale = music.getScaleTones(rootNoteIndex, Music.scaleTypes[type]);
+
+  const scaleNotes = scale.map((tone) => {
+    const canonicalNoteName = music.getCanonicalNoteName(tone);
+    const keyManagerNote = keyManager.selectNote(canonicalNoteName);
+    const noteNameLowerCase = keyManagerNote.note;
+    const noteName = (noteNameLowerCase[0].toUpperCase() +
+      noteNameLowerCase.slice(1)) as NoteName;
+
+    return { noteName, tone };
   });
 
-  return Array.from(uniqueNoteNames);
+  return scaleNotes;
 }
 
-const keySignatureNotes = Object.values(KeySignature).reduce(
+export const keySignatureNotes = Object.values(KeySignature).reduce(
   (accumulator, keySignature) => {
     return {
       ...accumulator,
-      ...{ [keySignature]: getNoteNamesForKeySignature(keySignature) },
+      ...{ [keySignature]: getScaleNotesForKeySignature(keySignature) },
     };
   },
-  {} as { [key in keyof typeof KeySignature]: NoteName[] }
+  {} as { [key in keyof typeof KeySignature]: ScaleNote[] }
 );
 
 export function getBeginnerNotes(): Note[] {
   // use C for beginner notes
   const keySignature = KeySignature.C;
-
-  const noteNames = keySignatureNotes[keySignature].filter((noteName) => {
-    return noteName.includes("#") === false && noteName.includes("b") === false;
-  });
+  const scaleNotes = keySignatureNotes[keySignature];
 
   const octaves = [Octave.Four];
   let notes: Note[] = [];
 
   for (const octave of octaves) {
-    for (const noteName of noteNames) {
+    for (const { noteName } of scaleNotes) {
       notes.push({
         noteName,
         octave,
@@ -100,10 +107,10 @@ export function getIntermediateNotes(): Note[] {
   const notes: Note[] = [];
 
   for (const keySignature of keySignatures) {
-    const noteNames = keySignatureNotes[keySignature];
+    const scalNotes = keySignatureNotes[keySignature];
 
     for (const { octave, clef } of octavesWithClef) {
-      for (const noteName of noteNames) {
+      for (const { noteName } of scalNotes) {
         notes.push({
           noteName,
           octave,
@@ -127,3 +134,19 @@ export function pickRandomItemFromArray<Type>(array: Type[]): {
   };
 }
 
+function getNoteNamesForKeySignature(keySignature: KeySignature): NoteName[] {
+  // prevent duplicate note names
+  const uniqueNoteNames = new Set<NoteName>();
+
+  // get the correct note name using Vexflow's KeyManager class
+  const keyManager = new KeyManager(keySignature);
+
+  Object.values(NoteName).forEach((noteName) => {
+    const adjustedNoteNameLowerCase = keyManager.selectNote(noteName).note;
+    const adjustedNoteName = (adjustedNoteNameLowerCase[0].toUpperCase() +
+      adjustedNoteNameLowerCase.slice(1)) as NoteName;
+    uniqueNoteNames.add(adjustedNoteName);
+  });
+
+  return Array.from(uniqueNoteNames);
+}
