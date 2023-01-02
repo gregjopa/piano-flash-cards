@@ -16,7 +16,9 @@ export const ErrorFallback: React.FC<FallbackProps> = ({
       <Alert type={AlertType.Danger} title="Something went wrong">
         {error.message}
       </Alert>
-      <Button onClick={resetErrorBoundary}>Try Again</Button>
+      <Button onClick={resetErrorBoundary} autoFocus={true}>
+        Try Again
+      </Button>
     </>
   );
 };

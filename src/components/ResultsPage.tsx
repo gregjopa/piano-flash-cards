@@ -59,7 +59,9 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
             type={AlertType.Success}
             title="Congrats! You completed the game"
           />
-          <Button onClick={onStartOver}>Start Over</Button>
+          <Button onClick={onStartOver} autoFocus={true}>
+            Start Over
+          </Button>
           <DisplayActualNote />
         </>
       );
@@ -67,7 +69,9 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
       return (
         <>
           <Alert type={AlertType.Success} title="Correct!" />
-          <Button onClick={onNextNote}>Next Note</Button>
+          <Button onClick={onNextNote} autoFocus={true}>
+            Next Note
+          </Button>
           <DisplayActualNote />
           <PianoKeyboard activeNote={actualNote} />
         </>
@@ -76,7 +80,9 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
       return (
         <>
           <Alert type={AlertType.Danger} title="Incorrect" />
-          <Button onClick={onStartOver}>Start Over</Button>
+          <Button onClick={onStartOver} autoFocus={true}>
+            Start Over
+          </Button>
           <DisplayActualNote />
           <PianoKeyboard activeNote={actualNote} />
         </>
