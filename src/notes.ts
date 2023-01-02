@@ -134,6 +134,7 @@ export function pickRandomItemFromArray<Type>(array: Type[]): {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getNoteNamesForKeySignature(keySignature: KeySignature): NoteName[] {
   // prevent duplicate note names
   const uniqueNoteNames = new Set<NoteName>();
