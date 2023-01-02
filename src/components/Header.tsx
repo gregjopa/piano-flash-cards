@@ -2,8 +2,8 @@ import React from "react";
 
 export const Header: React.FC = () => {
   return (
-    <header className="lg:py-16 py-8 text-center">
-      <h1 className="text-slate-900 font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight">
+    <header className="lg:py-10 sm:py-8 pt-4 pb-6 text-center">
+      <h1 className="text-slate-900 font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-tight">
         Piano Flash Cards
       </h1>
       <p className="mt-6 text-lg text-slate-600 hidden sm:block">
