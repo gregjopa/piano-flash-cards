@@ -59,26 +59,21 @@ export function getBeginnerNotes(): Note[] {
   const keySignature = KeySignature.C;
   const scaleNotes = keySignatureNotes[keySignature];
 
-  const octaves = [Octave.Four];
-  let notes: Note[] = [];
+  const notes = [];
 
-  for (const octave of octaves) {
-    for (const { noteName } of scaleNotes) {
-      notes.push({
-        noteName,
-        octave,
-        keySignature,
-        clef: Clef.Treble,
-      });
+  for (const { noteName } of scaleNotes) {
+    // filter out C4 since its the default first note
+    if (noteName === defaultNote.noteName) {
+      continue;
     }
-  }
 
-  // filter out C4 since its the default first note
-  notes = notes.filter(({ noteName, octave }) => {
-    return !(
-      noteName === defaultNote.noteName && octave === defaultNote.octave
-    );
-  });
+    notes.push({
+      noteName,
+      keySignature,
+      octave: Octave.Four,
+      clef: Clef.Treble,
+    });
+  }
 
   return notes;
 }
@@ -104,13 +99,13 @@ export function getIntermediateNotes(): Note[] {
       clef: Clef.Treble,
     },
   ];
-  const notes: Note[] = [];
+  const notes = [];
 
   for (const keySignature of keySignatures) {
-    const scalNotes = keySignatureNotes[keySignature];
+    const scaleNotes = keySignatureNotes[keySignature];
 
     for (const { octave, clef } of octavesWithClef) {
-      for (const { noteName } of scalNotes) {
+      for (const { noteName } of scaleNotes) {
         notes.push({
           noteName,
           octave,
