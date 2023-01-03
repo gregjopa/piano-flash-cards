@@ -6,7 +6,7 @@ export const Header: React.FC = () => {
       <h1 className="text-slate-900 font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-tight">
         Piano Flash Cards
       </h1>
-      <p className="mt-6 text-lg text-slate-600 hidden sm:block">
+      <p className="mt-6 text-lg hidden sm:block">
         Practice memorizing notes with these treble and bass clef{" "}
         <span className="whitespace-nowrap">flash cards</span>.
       </p>
