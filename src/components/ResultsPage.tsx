@@ -62,7 +62,6 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
           <Button onClick={onStartOver} autoFocus={true}>
             Start Over
           </Button>
-          <DisplayActualNote />
         </>
       );
     case GameState.CorrectGuess:
