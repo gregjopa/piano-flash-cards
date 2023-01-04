@@ -80,42 +80,51 @@ export function getBeginnerNotes(): Note[] {
 
 export function getIntermediateNotes(): Note[] {
   // F Major has 1 flat and G Major has 1 sharp
-  const keySignatures = [KeySignature.C, KeySignature.F, KeySignature.G];
-  const octavesWithClef = [
-    {
-      octave: Octave.Two,
-      clef: Clef.Bass,
-    },
-    {
-      octave: Octave.Three,
-      clef: Clef.Bass,
-    },
-    {
-      octave: Octave.Four,
-      clef: Clef.Treble,
-    },
-    {
-      octave: Octave.Five,
-      clef: Clef.Treble,
-    },
+  const { C, F, G } = KeySignature;
+  const { Two, Three, Four, Five, Six } = Octave;
+  const { Treble, Bass } = Clef;
+
+  // avoid drawing notes that go off the stave (ex: treble clef octave 6)
+  const cNotesPartialScale = keySignatureNotes[C].slice(0, 3);
+
+  const noteConfig = [
+    { key: C, octave: Two, clef: Bass, notes: keySignatureNotes[C] },
+    { key: F, octave: Two, clef: Bass, notes: keySignatureNotes[F] },
+    { key: G, octave: Two, clef: Bass, notes: keySignatureNotes[G] },
+    { key: F, octave: Three, clef: Bass, notes: keySignatureNotes[F] },
+    { key: G, octave: Three, clef: Bass, notes: keySignatureNotes[G] },
+    { key: C, octave: Four, clef: Bass, notes: cNotesPartialScale },
+    { key: F, octave: Four, clef: Treble, notes: keySignatureNotes[F] },
+    { key: G, octave: Four, clef: Treble, notes: keySignatureNotes[G] },
+    { key: F, octave: Five, clef: Treble, notes: keySignatureNotes[F] },
+    { key: G, octave: Five, clef: Treble, notes: keySignatureNotes[G] },
+    { key: C, octave: Six, clef: Treble, notes: cNotesPartialScale },
   ];
-  const notes = [];
 
-  for (const keySignature of keySignatures) {
-    const scaleNotes = keySignatureNotes[keySignature];
+  const uniqueNotes = new Set<String>();
+  const intermediateNotes = [];
 
-    for (const { octave, clef } of octavesWithClef) {
-      for (const { noteName } of scaleNotes) {
-        notes.push({
-          noteName,
-          octave,
-          clef,
-          keySignature,
-        });
+  for (const { key, octave, clef, notes } of noteConfig) {
+    for (const { noteName } of notes) {
+      const uniqueNoteKey = `${clef}${noteName}${octave}`;
+
+      // avoid duplicating notes with the same name, octave, and clef
+      if (uniqueNotes.has(uniqueNoteKey)) {
+        continue;
       }
+
+      uniqueNotes.add(uniqueNoteKey);
+
+      intermediateNotes.push({
+        noteName,
+        octave,
+        clef,
+        keySignature: key,
+      });
     }
   }
-  return notes;
+
+  return intermediateNotes;
 }
 
 export function pickRandomItemFromArray<Type>(array: Type[]): {
