@@ -102,12 +102,7 @@ function App() {
   }
 
   return (
-    <div
-      className="
-        h-[900px] max-w-2xl mx-auto px-8 pb-8
-        text-slate-600 text-lg bg-slate-50
-        md:border-solid md:border-x md:border-b md:border-gray-500"
-    >
+    <div className="mx-auto h-[900px] max-w-2xl bg-slate-50 px-8 pb-8 text-lg text-slate-600 md:border-x md:border-b md:border-solid md:border-gray-500">
       <Header />
       <ErrorBoundary
         FallbackComponent={ErrorFallback}

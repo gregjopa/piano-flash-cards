@@ -2,11 +2,11 @@ import React from "react";
 
 export const Header: React.FC = () => {
   return (
-    <header className="lg:py-10 sm:py-8 pt-4 pb-6 text-center">
-      <h1 className="text-slate-900 font-extrabold text-2xl sm:text-4xl lg:text-5xl tracking-tight">
+    <header className="pt-4 pb-6 text-center sm:py-8 lg:py-10">
+      <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
         Piano Flash Cards
       </h1>
-      <p className="mt-6 text-lg hidden sm:block">
+      <p className="mt-6 hidden text-lg sm:block">
         Practice memorizing notes with these treble and bass clef{" "}
         <span className="whitespace-nowrap">flash cards</span>.
       </p>

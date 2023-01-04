@@ -19,7 +19,7 @@ function SuccessIcon() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-6 h-6 mr-2"
+      className="mr-2 h-6 w-6"
     >
       <path
         strokeLinecap="round"
@@ -38,7 +38,7 @@ function DangerIcon() {
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
-      className="w-6 h-6 mr-2"
+      className="mr-2 h-6 w-6"
     >
       <path
         strokeLinecap="round"
@@ -59,7 +59,7 @@ export const Alert: React.FC<AlertProps> = ({ type, title, children }) => {
         type === AlertType.Danger
           ? "bg-red-100 text-red-700"
           : "bg-green-100 text-green-700"
-      } px-4 py-2 my-4`}
+      } my-4 px-4 py-2`}
     >
       <div className="flex items-center">
         <Icon />

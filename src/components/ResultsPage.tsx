@@ -26,16 +26,16 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
       : `${keySignature} Major`;
 
     return (
-      <table className="border-collapse table-auto w-full mt-4 mb-2 text-center">
+      <table className="mt-4 mb-2 w-full table-auto border-collapse text-center">
         <thead>
           <tr>
-            <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-2">
+            <th className="border-b border-gray-300 p-4 pl-8 pt-0 pb-2 font-medium">
               Note
             </th>
-            <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-2">
+            <th className="border-b border-gray-300 p-4 pl-8 pt-0 pb-2 font-medium">
               Octave
             </th>
-            <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-2">
+            <th className="border-b border-gray-300 p-4 pl-8 pt-0 pb-2 font-medium">
               Key
             </th>
           </tr>
