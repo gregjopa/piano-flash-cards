@@ -49,7 +49,7 @@ export const NoteSelector: React.FC<NoteSelectorProps> = ({
       </label>
       <select
         id="notes"
-        className="form-select min-w-full mb-1 disabled:opacity-50"
+        className="form-select min-w-full mb-1 disabled:opacity-50 focus:ring-4 focus:ring-blue-300 focus:border-blue-300"
         value={selectedNote}
         onChange={handleNoteNameChange}
         disabled={isDisabled}
