@@ -104,7 +104,7 @@ function App() {
   return (
     <div
       className="
-        h-full max-w-2xl mx-auto px-8 pb-8
+        h-[900px] max-w-2xl mx-auto px-8 pb-8
         text-slate-600 text-lg bg-slate-50
         md:border-solid md:border-x md:border-b md:border-gray-500"
     >
