@@ -42,7 +42,7 @@ export const PianoKeyboard: React.FC<PianoKeyboardProps> = ({ activeNote }) => {
             ? "h-24 basis-12 bg-white border-gray-500"
             : "h-16 basis-8 bg-black text-white border-black border-r z-10 -ml-4"
         } ${offset === true ? "-ml-4" : ""} ${
-          isActiveNote ? "font-bold bg-gray-300 text-black" : ""
+          isActiveNote ? "font-bold bg-gray-300 text-slate-900" : ""
         }`}
         key={noteIndex}
       >

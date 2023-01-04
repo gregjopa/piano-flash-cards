@@ -26,7 +26,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
       : `${keySignature} Major`;
 
     return (
-      <table className="border-collapse table-auto w-full mt-6 mb-2 text-center">
+      <table className="border-collapse table-auto w-full mt-4 mb-2 text-center">
         <thead>
           <tr>
             <th className="border-b border-gray-300 font-medium p-4 pl-8 pt-0 pb-2">
@@ -42,9 +42,11 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
         </thead>
         <tbody>
           <tr>
-            <td className="py-2 pl-8 pr-4">{noteName}</td>
-            <td className="py-2 pl-8 pr-4">{octave}</td>
-            <td className="py-2 pl-8 pr-4">{keySignatureWithLabel}</td>
+            <td className="py-2 pl-8 pr-4 text-slate-900">{noteName}</td>
+            <td className="py-2 pl-8 pr-4 text-slate-900">{octave}</td>
+            <td className="py-2 pl-8 pr-4 text-slate-900">
+              {keySignatureWithLabel}
+            </td>
           </tr>
         </tbody>
       </table>
