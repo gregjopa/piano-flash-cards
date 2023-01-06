@@ -29,6 +29,18 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script>
+      window.onload = function () {
+        var doesNotSupportES6 = typeof Symbol === "undefined";
+        if (doesNotSupportES6) {
+          var headingElement = document.createElement("h1");
+          headingElement.setAttribute("style", "text-align: center;");
+          headingElement.textContent =
+            "Failed to load the Piano Flash Card application. Your browser is too old! Please try using a modern web browser.";
+          document.querySelector("body").appendChild(headingElement);
+        }
+      };
+    </script>
     <div id="root"></div>
     <!--
       This HTML file is a template.
