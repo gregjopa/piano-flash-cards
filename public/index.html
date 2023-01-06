@@ -29,6 +29,22 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <!-- Google Analytics tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-9CBPKWQ157"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-9CBPKWQ157");
+    </script>
+
     <script>
       window.onload = function () {
         var doesNotSupportES6 = typeof Symbol === "undefined";
@@ -38,6 +54,11 @@
           headingElement.textContent =
             "Failed to load the Piano Flash Card application. Your browser is too old! Please try using a modern web browser.";
           document.querySelector("body").appendChild(headingElement);
+
+          gtag("event", "exception", {
+            description: "browser does not support ES6",
+            fatal: true,
+          });
         }
       };
     </script>

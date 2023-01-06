@@ -40,6 +40,9 @@ function App() {
       difficultyLevel === DifficultyLevel.Beginner &&
       remainingBeginnerNotes.length === 0
     ) {
+      gtag("event", "level_end", { level_name: DifficultyLevel.Beginner, success: true });
+      gtag("event", "level_start", { level_name: DifficultyLevel.Intermediate });
+
       return setDifficultyLevel(DifficultyLevel.Intermediate);
     }
 
@@ -49,10 +52,17 @@ function App() {
       try {
         newNote = getNextRandomNote();
       } catch (err) {
+        gtag("event", "level_end", { level_name: DifficultyLevel.Intermediate, success: true });
         return setGameState(GameState.Finished);
       }
       setActualNote(newNote);
       setGameState(GameState.WaitingForGuess);
+    }
+
+    if (gameState === GameState.Finished) {
+      gtag("event", "post_score", {
+        score: countOfCorrectGuesses,
+      });
     }
 
     function getNextRandomNote(): Note {
@@ -99,6 +109,22 @@ function App() {
       setGameState(GameState.IncorrectGuess);
     }
     setGuessedNoteName(userGuess);
+
+    gtag("event", "select_content", {
+      content_type:
+        userGuess === actualNote.noteName
+          ? GameState.CorrectGuess
+          : GameState.IncorrectGuess,
+      item_id: userGuess,
+    });
+  }
+
+  function handleOnError(error: Error) {
+    setGameState(GameState.Error);
+    gtag("event", "exception", {
+      description: error.message,
+      fatal: true,
+    });
   }
 
   return (
@@ -106,7 +132,7 @@ function App() {
       <Header />
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
-        onError={() => setGameState(GameState.Error)}
+        onError={handleOnError}
         onReset={startOver}
       >
         <NoteSelector
