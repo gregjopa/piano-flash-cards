@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { NoteName, GameState, DifficultyLevel } from "./constants";
 import {
@@ -34,89 +34,95 @@ function App() {
     getIntermediateNotes()
   );
 
-  useEffect(() => {
+  function checkForRemainingNotes() {
     // check to see if its time to advance to the next difficulty level
     if (
       difficultyLevel === DifficultyLevel.Beginner &&
       remainingBeginnerNotes.length === 0
     ) {
-      gtag("event", "level_end", { level_name: DifficultyLevel.Beginner, success: true });
-      gtag("event", "level_start", { level_name: DifficultyLevel.Intermediate });
+      setDifficultyLevel(DifficultyLevel.Intermediate);
 
-      return setDifficultyLevel(DifficultyLevel.Intermediate);
+      gtag("event", "level_end", {
+        level_name: DifficultyLevel.Beginner,
+        success: true,
+      });
+      gtag("event", "level_start", {
+        level_name: DifficultyLevel.Intermediate,
+      });
     }
+  }
 
-    if (gameState === GameState.GetNextNote) {
-      setGuessedNoteName("");
-      let newNote;
-      try {
-        newNote = getNextRandomNote();
-      } catch (err) {
-        gtag("event", "level_end", { level_name: DifficultyLevel.Intermediate, success: true });
-        return setGameState(GameState.Finished);
-      }
-      setActualNote(newNote);
-      setGameState(GameState.WaitingForGuess);
-    }
+  function handleGuess(userGuess: NoteName) {
+    setGuessedNoteName(userGuess);
 
-    if (gameState === GameState.Finished) {
+    if (userGuess === actualNote.noteName) {
+      setCountOfCorrectGuesses(countOfCorrectGuesses + 1);
+      setGameState(GameState.CorrectGuess);
+      checkForRemainingNotes();
+
+      gtag("event", "select_content", {
+        content_type: GameState.CorrectGuess,
+        item_id: userGuess,
+      });
+    } else {
+      setGameState(GameState.IncorrectGuess);
+
+      setRemainingBeginnerNotes(getBeginnerNotes());
+      setRemainingIntermediateNotes(getIntermediateNotes());
+      setDifficultyLevel(DifficultyLevel.Beginner);
+
+      gtag("event", "select_content", {
+        content_type: GameState.IncorrectGuess,
+        item_id: userGuess,
+      });
+
       gtag("event", "post_score", {
         score: countOfCorrectGuesses,
       });
     }
-
-    function getNextRandomNote(): Note {
-      const remainingNotes =
-        difficultyLevel === DifficultyLevel.Beginner
-          ? remainingBeginnerNotes
-          : remainingIntermediateNotes;
-      const setRemainingNotes =
-        difficultyLevel === DifficultyLevel.Beginner
-          ? setRemainingBeginnerNotes
-          : setRemainingIntermediateNotes;
-
-      if (remainingNotes.length === 0) {
-        throw new Error("No notes left!");
-      }
-
-      const { value, index } = pickRandomItemFromArray(remainingNotes);
-      setRemainingNotes([
-        ...remainingNotes.slice(0, index),
-        ...remainingNotes.slice(index + 1, remainingNotes.length),
-      ]);
-      return value;
-    }
-  }, [
-    gameState,
-    difficultyLevel,
-    remainingBeginnerNotes,
-    remainingIntermediateNotes,
-  ]);
-
-  function startOver() {
-    setCountOfCorrectGuesses(0);
-    setRemainingBeginnerNotes(getBeginnerNotes());
-    setRemainingIntermediateNotes(getIntermediateNotes());
-    setDifficultyLevel(DifficultyLevel.Beginner);
-    setGameState(GameState.GetNextNote);
   }
 
-  function handleGuess(userGuess: NoteName) {
-    if (userGuess === actualNote.noteName) {
-      setCountOfCorrectGuesses(countOfCorrectGuesses + 1);
-      setGameState(GameState.CorrectGuess);
-    } else {
-      setGameState(GameState.IncorrectGuess);
-    }
-    setGuessedNoteName(userGuess);
+  function handleNextNote() {
+    setGuessedNoteName("");
+    let newNote;
+    try {
+      newNote = getNextRandomNote();
+    } catch (err) {
+      gtag("event", "level_end", {
+        level_name: DifficultyLevel.Intermediate,
+        success: true,
+      });
 
-    gtag("event", "select_content", {
-      content_type:
-        userGuess === actualNote.noteName
-          ? GameState.CorrectGuess
-          : GameState.IncorrectGuess,
-      item_id: userGuess,
-    });
+      gtag("event", "post_score", {
+        score: countOfCorrectGuesses,
+      });
+
+      return setGameState(GameState.Finished);
+    }
+    setActualNote(newNote);
+    setGameState(GameState.WaitingForGuess);
+  }
+
+  function getNextRandomNote(): Note {
+    const remainingNotes =
+      difficultyLevel === DifficultyLevel.Beginner
+        ? remainingBeginnerNotes
+        : remainingIntermediateNotes;
+    const setRemainingNotes =
+      difficultyLevel === DifficultyLevel.Beginner
+        ? setRemainingBeginnerNotes
+        : setRemainingIntermediateNotes;
+
+    if (remainingNotes.length === 0) {
+      throw new Error("No notes left!");
+    }
+
+    const { value, index } = pickRandomItemFromArray(remainingNotes);
+    setRemainingNotes([
+      ...remainingNotes.slice(0, index),
+      ...remainingNotes.slice(index + 1, remainingNotes.length),
+    ]);
+    return value;
   }
 
   function handleOnError(error: Error) {
@@ -127,18 +133,26 @@ function App() {
     });
   }
 
+  function handleStartOver() {
+    setCountOfCorrectGuesses(0);
+    handleNextNote();
+  }
+
   return (
     <div className="mx-auto h-[900px] max-w-2xl bg-slate-50 px-8 pb-8 text-lg text-slate-600 md:border-x md:border-b md:border-solid md:border-gray-500">
       <Header />
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onError={handleOnError}
-        onReset={startOver}
+        onReset={handleStartOver}
       >
         <NoteSelector
           selectedNote={guessedNoteName}
           onNoteNameChange={handleGuess}
-          isDisabled={Boolean(guessedNoteName)}
+          isDisabled={
+            gameState !== GameState.WaitingForGuess &&
+            gameState !== GameState.NotStarted
+          }
           shouldFocus={
             gameState === GameState.WaitingForGuess ||
             gameState === GameState.NotStarted
@@ -150,8 +164,8 @@ function App() {
         <ResultsPage
           gameState={gameState}
           actualNote={actualNote}
-          onNextNote={() => setGameState(GameState.GetNextNote)}
-          onStartOver={startOver}
+          onNextNote={handleNextNote}
+          onStartOver={handleStartOver}
         />
       </ErrorBoundary>
     </div>
