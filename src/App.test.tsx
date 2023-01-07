@@ -9,6 +9,9 @@ jest.mock("./components/StaveNote", () => ({
   },
 }));
 
+// mock google analytics
+global.gtag = jest.fn();
+
 test("initial score is zero", () => {
   render(<App />);
   const score = screen.getByText(/Score: 0/i);
