@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, Dispatch } from "react";
+import React, { Dispatch } from "react";
 
 import { NoteName } from "../constants";
 
@@ -15,19 +15,6 @@ export const NoteSelector: React.FC<NoteSelectorProps> = ({
   selectedNote,
   isDisabled,
 }) => {
-  const selectElement = useRef<HTMLSelectElement>(null);
-
-  useEffect(() => {
-    if (selectElement.current === null) {
-      return;
-    }
-    if (shouldFocus) {
-      selectElement.current.focus();
-    } else {
-      selectElement.current.blur();
-    }
-  }, [shouldFocus]);
-
   const noteNameOptions = Object.entries(NoteName).map(([key, value]) => {
     return (
       <option key={key} value={value}>
@@ -49,11 +36,13 @@ export const NoteSelector: React.FC<NoteSelectorProps> = ({
       </label>
       <select
         id="notes"
-        className="form-select mb-1 min-w-full focus:border-blue-300 focus:ring-4 focus:ring-blue-300 disabled:opacity-50"
+        className={`form-select mb-1 min-w-full focus:border-blue-300 focus:ring-4 focus:ring-blue-300 disabled:opacity-50 ${
+          shouldFocus ? "border-blue-300 ring-4 ring-blue-300" : ""
+        }`}
         value={selectedNote}
         onChange={handleNoteNameChange}
         disabled={isDisabled}
-        ref={selectElement}
+        autoFocus={shouldFocus}
       >
         {[defaultOption, ...noteNameOptions]}
       </select>
