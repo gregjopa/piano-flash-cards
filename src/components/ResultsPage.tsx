@@ -62,7 +62,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
             title="Congrats! You completed the game"
           />
           <Button onClick={onStartOver} autoFocus={true}>
-            Start Over
+            Play Again
           </Button>
         </>
       );

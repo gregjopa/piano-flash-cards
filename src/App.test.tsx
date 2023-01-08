@@ -82,4 +82,5 @@ test("complete the game after guessing all the notes", () => {
   expect(
     screen.getByText(/Congrats! You completed the game/i)
   ).toBeInTheDocument();
+  expect(screen.getByText(/Play Again/i)).toBeInTheDocument();
 });
