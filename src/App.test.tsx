@@ -9,33 +9,77 @@ jest.mock("./components/StaveNote", () => ({
   },
 }));
 
+jest.mock("./notes", () => {
+  const originalModule = jest.requireActual("./notes");
+
+  return {
+    ...originalModule,
+    defaultNote: {
+      noteName: "D",
+      octave: 4,
+      clef: "treble",
+      keySignature: "C",
+    },
+    getBeginnerNotes() {
+      return [
+        {
+          noteName: "E",
+          octave: 4,
+          clef: "treble",
+          keySignature: "C",
+        },
+      ];
+    },
+    getIntermediateNotes() {
+      return [
+        {
+          noteName: "F",
+          octave: 4,
+          clef: "treble",
+          keySignature: "C",
+        },
+      ];
+    },
+  };
+});
+
 // mock google analytics
 global.gtag = jest.fn();
 
 test("initial score is zero", () => {
   render(<App />);
-  const score = screen.getByText(/Score: 0/i);
-  expect(score).toBeInTheDocument();
+  expect(screen.getByText(/Score: 0/i)).toBeInTheDocument();
 });
 
 test("score increases after a correct guess", () => {
   render(<App />);
-  fireEvent.change(screen.getByLabelText("What note is it?"), {
-    target: { value: "C" },
-  });
-  const alert = screen.getByRole("alert");
-  expect(alert).toHaveTextContent("Correct!");
-  const updatedScore = screen.getByText(/Score: 1/i);
-  expect(updatedScore).toBeInTheDocument();
+  const noteSelectorElement = screen.getByLabelText("What note is it?");
+  fireEvent.change(noteSelectorElement, { target: { value: "D" } });
+  expect(screen.getByRole("alert")).toHaveTextContent("Correct!");
+  expect(noteSelectorElement).toBeDisabled();
+  expect(screen.getByText(/Score: 1/i)).toBeInTheDocument();
 });
 
 test("start over button dislays after an incorrect guess", () => {
   render(<App />);
   fireEvent.change(screen.getByLabelText("What note is it?"), {
-    target: { value: "D" },
+    target: { value: "A" },
   });
-  const alert = screen.getByRole("alert");
-  expect(alert).toHaveTextContent("Incorrect");
-  const startOverButton = screen.getByText(/Start Over/i);
-  expect(startOverButton).toBeInTheDocument();
+  expect(screen.getByRole("alert")).toHaveTextContent("Incorrect");
+  expect(screen.getByText(/Start Over/i)).toBeInTheDocument();
+});
+
+test("complete the game after guessing all the notes", () => {
+  render(<App />);
+  const noteSelectorElement = screen.getByLabelText("What note is it?");
+  fireEvent.change(noteSelectorElement, { target: { value: "D" } });
+  fireEvent.click(screen.getByText(/Next Note/i));
+  fireEvent.change(noteSelectorElement, { target: { value: "E" } });
+  fireEvent.click(screen.getByText(/Next Note/i));
+  fireEvent.change(noteSelectorElement, { target: { value: "F" } });
+  fireEvent.click(screen.getByText(/Next Note/i));
+
+  expect(
+    screen.getByText(/Congrats! You completed the game/i)
+  ).toBeInTheDocument();
 });
