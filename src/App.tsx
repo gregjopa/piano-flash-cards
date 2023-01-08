@@ -88,6 +88,12 @@ function App() {
     try {
       newNote = getNextRandomNote();
     } catch (err) {
+      setGameState(GameState.Finished);
+
+      setRemainingBeginnerNotes(getBeginnerNotes());
+      setRemainingIntermediateNotes(getIntermediateNotes());
+      setDifficultyLevel(DifficultyLevel.Beginner);
+
       gtag("event", "level_end", {
         level_name: DifficultyLevel.Intermediate,
         success: true,
@@ -97,7 +103,7 @@ function App() {
         score: countOfCorrectGuesses,
       });
 
-      return setGameState(GameState.Finished);
+      return;
     }
     setActualNote(newNote);
     setGameState(GameState.WaitingForGuess);
