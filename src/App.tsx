@@ -52,6 +52,12 @@ function App() {
     }
   }
 
+  function resetStateForDifficultyLevel() {
+    setRemainingBeginnerNotes(getBeginnerNotes());
+    setRemainingIntermediateNotes(getIntermediateNotes());
+    setDifficultyLevel(DifficultyLevel.Beginner);
+  }
+
   function handleGuess(userGuess: NoteName) {
     setGuessedNoteName(userGuess);
 
@@ -66,10 +72,7 @@ function App() {
       });
     } else {
       setGameState(GameState.IncorrectGuess);
-
-      setRemainingBeginnerNotes(getBeginnerNotes());
-      setRemainingIntermediateNotes(getIntermediateNotes());
-      setDifficultyLevel(DifficultyLevel.Beginner);
+      resetStateForDifficultyLevel();
 
       gtag("event", "select_content", {
         content_type: GameState.IncorrectGuess,
@@ -89,10 +92,7 @@ function App() {
       newNote = getNextRandomNote();
     } catch (err) {
       setGameState(GameState.Finished);
-
-      setRemainingBeginnerNotes(getBeginnerNotes());
-      setRemainingIntermediateNotes(getIntermediateNotes());
-      setDifficultyLevel(DifficultyLevel.Beginner);
+      resetStateForDifficultyLevel();
 
       gtag("event", "level_end", {
         level_name: DifficultyLevel.Intermediate,
