@@ -18,13 +18,15 @@ export const NoteSelector: React.FC<NoteSelectorProps> = ({
   const selectElement = useRef<HTMLSelectElement>(null);
 
   useEffect(() => {
-    if (selectElement.current === null) {
-      return;
-    }
     if (shouldFocus) {
-      selectElement.current.focus();
-    } else {
-      selectElement.current.blur();
+      // delay focus() behavior to prevent iOS Safari from auto opening and covering up the note
+      setTimeout(() => {
+        if (selectElement.current === null) {
+          return;
+        }
+
+        selectElement.current.focus();
+      }, 10);
     }
   }, [shouldFocus]);
 
