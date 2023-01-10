@@ -29,7 +29,8 @@
     "lint": "eslint src/**/*.ts{,x}",
     "format": "prettier --write .",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "validate": "prettier --check . && npm run lint && npm run build && npm test -- --watchAll=false"
   },
   "eslintConfig": {
     "extends": [
