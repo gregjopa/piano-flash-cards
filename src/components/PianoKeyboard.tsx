@@ -41,7 +41,7 @@ export const PianoKeyboard: React.FC<PianoKeyboardProps> = ({ activeNote }) => {
           color === "white"
             ? "h-24 basis-12 border-gray-500 bg-white"
             : "z-10 -ml-4 h-16 basis-8 border-r border-black bg-black text-white"
-        } ${offset === true ? "-ml-4" : ""} ${
+        }${offset === true ? " -ml-4" : ""} ${
           isActiveNote ? "bg-gray-300 font-bold text-slate-900" : ""
         }`}
         key={noteIndex}

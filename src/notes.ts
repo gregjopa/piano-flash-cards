@@ -21,9 +21,7 @@ type ScaleNote = {
   tone: number;
 };
 
-export function getScaleNotesForKeySignature(
-  keySignature: KeySignature
-): ScaleNote[] {
+function getScaleNotesForKeySignature(keySignature: KeySignature): ScaleNote[] {
   const music = new Music();
   const keyManager = new KeyManager(keySignature);
 
