@@ -15,6 +15,7 @@ import { NoteSelector } from "./components/NoteSelector";
 import { StaveNote } from "./components/StaveNote";
 import { ResultsPage } from "./components/ResultsPage";
 import { ErrorFallback } from "./components/ErrorFallback";
+import { Footer } from "./components/Footer";
 
 import "./App.css";
 
@@ -145,36 +146,39 @@ function App() {
   }
 
   return (
-    <div className="mx-auto h-[900px] max-w-2xl bg-slate-50 px-8 pb-8 text-lg text-slate-600 md:border-x md:border-b md:border-solid md:border-gray-500">
-      <Header />
-      <ErrorBoundary
-        FallbackComponent={ErrorFallback}
-        onError={handleOnError}
-        onReset={handleStartOver}
-      >
-        <NoteSelector
-          selectedNote={guessedNoteName}
-          onNoteNameChange={handleGuess}
-          isDisabled={
-            gameState !== GameState.WaitingForGuess &&
-            gameState !== GameState.NotStarted
-          }
-          shouldFocus={
-            gameState === GameState.WaitingForGuess ||
-            gameState === GameState.NotStarted
-          }
-        />
-        <StaveNote note={actualNote} />
-        <div>Score: {countOfCorrectGuesses}</div>
+    <>
+      <div className="mx-auto h-[900px] max-w-2xl bg-slate-50 px-8 pb-8 text-lg text-slate-600 md:border-x md:border-b md:border-solid md:border-gray-500">
+        <Header />
+        <ErrorBoundary
+          FallbackComponent={ErrorFallback}
+          onError={handleOnError}
+          onReset={handleStartOver}
+        >
+          <NoteSelector
+            selectedNote={guessedNoteName}
+            onNoteNameChange={handleGuess}
+            isDisabled={
+              gameState !== GameState.WaitingForGuess &&
+              gameState !== GameState.NotStarted
+            }
+            shouldFocus={
+              gameState === GameState.WaitingForGuess ||
+              gameState === GameState.NotStarted
+            }
+          />
+          <StaveNote note={actualNote} />
+          <div>Score: {countOfCorrectGuesses}</div>
 
-        <ResultsPage
-          gameState={gameState}
-          actualNote={actualNote}
-          onNextNote={handleNextNote}
-          onStartOver={handleStartOver}
-        />
-      </ErrorBoundary>
-    </div>
+          <ResultsPage
+            gameState={gameState}
+            actualNote={actualNote}
+            onNextNote={handleNextNote}
+            onStartOver={handleStartOver}
+          />
+        </ErrorBoundary>
+      </div>
+      <Footer />
+    </>
   );
 }
 
