@@ -30,16 +30,16 @@ function draw(
   container: HTMLDivElement,
   { note, width, height }: { note: Note; width: number; height: number }
 ) {
-  const VF = Vex.Flow;
+  const { Renderer, Stave, StaveNote, Voice, Accidental, Formatter } = Vex.Flow;
   container.innerHTML = "";
-  const renderer = new VF.Renderer(container, VF.Renderer.Backends.SVG);
+  const renderer = new Renderer(container, Renderer.Backends.SVG);
 
   renderer.resize(width, height);
   renderer.getContext().scale(2, 2);
   const context = renderer.getContext();
 
   const scaledWidth = width / 2;
-  const stave = new VF.Stave(0, 0, scaledWidth - 1);
+  const stave = new Stave(0, 0, scaledWidth - 1);
 
   const { clef, octave, keySignature, noteName } = note;
 
@@ -48,7 +48,7 @@ function draw(
   stave.setContext(context).draw();
 
   const notes = [
-    new VF.StaveNote({
+    new StaveNote({
       clef,
       keys: [`${noteName}/${octave}`],
       duration: "4",
@@ -57,13 +57,13 @@ function draw(
     }),
   ];
 
-  const voice = new VF.Voice({ num_beats: 1, beat_value: 4 })
+  const voice = new Voice({ num_beats: 1, beat_value: 4 })
     .setStrict(false)
     .addTickables(notes);
 
-  VF.Accidental.applyAccidentals([voice], keySignature);
+  Accidental.applyAccidentals([voice], keySignature);
 
-  new VF.Formatter().joinVoices([voice]).format([voice], scaledWidth / 2);
+  new Formatter().joinVoices([voice]).format([voice], scaledWidth / 2);
 
   voice.draw(context, stave);
 }
