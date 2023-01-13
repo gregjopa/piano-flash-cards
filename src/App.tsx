@@ -5,6 +5,7 @@ import { NoteName, GameState, DifficultyLevel } from "./constants";
 import {
   getBeginnerNotes,
   getIntermediateNotes,
+  getAdvancedNotes,
   pickRandomItemFromArray,
   defaultNote,
   Note,
@@ -28,18 +29,18 @@ function App() {
   );
 
   const [gameState, setGameState] = useState<GameState>(GameState.NotStarted);
-  const [remainingBeginnerNotes, setRemainingBeginnerNotes] = useState(
-    getBeginnerNotes()
-  );
-  const [remainingIntermediateNotes, setRemainingIntermediateNotes] = useState(
-    getIntermediateNotes()
-  );
+
+  const [remainingNotes, setRemainingNotes] = useState({
+    [DifficultyLevel.Beginner]: getBeginnerNotes(),
+    [DifficultyLevel.Intermediate]: getIntermediateNotes(),
+    [DifficultyLevel.Advanced]: getAdvancedNotes(),
+  });
 
   function checkForRemainingNotes() {
     // check to see if its time to advance to the next difficulty level
     if (
       difficultyLevel === DifficultyLevel.Beginner &&
-      remainingBeginnerNotes.length === 0
+      remainingNotes[DifficultyLevel.Beginner].length === 0
     ) {
       setDifficultyLevel(DifficultyLevel.Intermediate);
 
@@ -50,12 +51,29 @@ function App() {
       gtag("event", "level_start", {
         level_name: DifficultyLevel.Intermediate,
       });
+    } else if (
+      difficultyLevel === DifficultyLevel.Intermediate &&
+      remainingNotes[DifficultyLevel.Intermediate].length === 0
+    ) {
+      setDifficultyLevel(DifficultyLevel.Advanced);
+
+      gtag("event", "level_end", {
+        level_name: DifficultyLevel.Intermediate,
+        success: true,
+      });
+      gtag("event", "level_start", {
+        level_name: DifficultyLevel.Advanced,
+      });
     }
   }
 
   function resetStateForDifficultyLevel() {
-    setRemainingBeginnerNotes(getBeginnerNotes());
-    setRemainingIntermediateNotes(getIntermediateNotes());
+    setRemainingNotes({
+      [DifficultyLevel.Beginner]: getBeginnerNotes(),
+      [DifficultyLevel.Intermediate]: getIntermediateNotes(),
+      [DifficultyLevel.Advanced]: getAdvancedNotes(),
+    });
+
     setDifficultyLevel(DifficultyLevel.Beginner);
   }
 
@@ -96,7 +114,7 @@ function App() {
       resetStateForDifficultyLevel();
 
       gtag("event", "level_end", {
-        level_name: DifficultyLevel.Intermediate,
+        level_name: DifficultyLevel.Advanced,
         success: true,
       });
 
@@ -111,24 +129,20 @@ function App() {
   }
 
   function getNextRandomNote(): Note {
-    const remainingNotes =
-      difficultyLevel === DifficultyLevel.Beginner
-        ? remainingBeginnerNotes
-        : remainingIntermediateNotes;
-    const setRemainingNotes =
-      difficultyLevel === DifficultyLevel.Beginner
-        ? setRemainingBeginnerNotes
-        : setRemainingIntermediateNotes;
+    const currentRemainingNotes = remainingNotes[difficultyLevel];
 
-    if (remainingNotes.length === 0) {
+    if (currentRemainingNotes.length === 0) {
       throw new Error("No notes left!");
     }
 
-    const { value, index } = pickRandomItemFromArray(remainingNotes);
-    setRemainingNotes([
-      ...remainingNotes.slice(0, index),
-      ...remainingNotes.slice(index + 1, remainingNotes.length),
-    ]);
+    const { value, index } = pickRandomItemFromArray(currentRemainingNotes);
+    setRemainingNotes({
+      ...remainingNotes,
+      [difficultyLevel]: [
+        ...currentRemainingNotes.slice(0, index),
+        ...currentRemainingNotes.slice(index + 1, currentRemainingNotes.length),
+      ],
+    });
     return value;
   }
 

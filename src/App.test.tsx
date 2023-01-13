@@ -40,6 +40,16 @@ jest.mock("./notes", () => {
         },
       ];
     },
+    getAdvancedNotes() {
+      return [
+        {
+          noteName: "G",
+          octave: 4,
+          clef: "treble",
+          keySignature: "C",
+        },
+      ];
+    },
   };
 });
 
@@ -77,6 +87,8 @@ test("complete the game after guessing all the notes", () => {
   fireEvent.change(noteSelectorElement, { target: { value: "E" } });
   fireEvent.click(screen.getByText(/Next Note/i));
   fireEvent.change(noteSelectorElement, { target: { value: "F" } });
+  fireEvent.click(screen.getByText(/Next Note/i));
+  fireEvent.change(noteSelectorElement, { target: { value: "G" } });
   fireEvent.click(screen.getByText(/Next Note/i));
 
   expect(

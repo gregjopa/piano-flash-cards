@@ -125,6 +125,48 @@ export function getIntermediateNotes(): Note[] {
   return intermediateNotes;
 }
 
+export function getAdvancedNotes(): Note[] {
+  const advancedKeys = [
+    KeySignature.D,
+    KeySignature.A,
+    KeySignature.E,
+    KeySignature.B,
+    KeySignature.Bb,
+    KeySignature.Eb,
+    KeySignature.Db,
+    KeySignature.Gb,
+  ];
+  const octaves = [Octave.Three, Octave.Four, Octave.Five];
+
+  const uniqueNotes = new Set<String>();
+  const advancedNotes = [];
+
+  for (const key of advancedKeys) {
+    for (const octave of octaves) {
+      for (const { noteName } of keySignatureNotes[key]) {
+        const clef = octave === Octave.Three ? Clef.Bass : Clef.Treble;
+        const uniqueNoteKey = `${clef}${noteName}${octave}`;
+
+        // avoid duplicating notes with the same name, octave, and clef
+        if (uniqueNotes.has(uniqueNoteKey)) {
+          continue;
+        }
+
+        uniqueNotes.add(uniqueNoteKey);
+
+        advancedNotes.push({
+          noteName,
+          octave,
+          clef,
+          keySignature: key,
+        });
+      }
+    }
+  }
+
+  return advancedNotes;
+}
+
 export function pickRandomItemFromArray<Type>(array: Type[]): {
   value: Type;
   index: number;
