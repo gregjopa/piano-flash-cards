@@ -36,34 +36,41 @@ function App() {
     [DifficultyLevel.Advanced]: getAdvancedNotes(),
   });
 
-  function checkForRemainingNotes() {
-    // check to see if its time to advance to the next difficulty level
-    if (
-      difficultyLevel === DifficultyLevel.Beginner &&
-      remainingNotes[DifficultyLevel.Beginner].length === 0
-    ) {
-      setDifficultyLevel(DifficultyLevel.Intermediate);
+  function advanceToNextLevel() {
+    let nextLevel;
 
+    switch (difficultyLevel) {
+      case DifficultyLevel.Beginner:
+        nextLevel = DifficultyLevel.Intermediate;
+        break;
+      case DifficultyLevel.Intermediate:
+        nextLevel = DifficultyLevel.Advanced;
+        break;
+      case DifficultyLevel.Advanced:
+        setGameState(GameState.Finished);
+        resetStateForDifficultyLevel();
+
+        gtag("event", "level_end", {
+          level_name: DifficultyLevel.Advanced,
+          success: true,
+        });
+
+        gtag("event", "post_score", {
+          score: countOfCorrectGuesses,
+        });
+        break;
+    }
+
+    if (nextLevel) {
       gtag("event", "level_end", {
-        level_name: DifficultyLevel.Beginner,
+        level_name: difficultyLevel,
         success: true,
       });
       gtag("event", "level_start", {
-        level_name: DifficultyLevel.Intermediate,
+        level_name: nextLevel,
       });
-    } else if (
-      difficultyLevel === DifficultyLevel.Intermediate &&
-      remainingNotes[DifficultyLevel.Intermediate].length === 0
-    ) {
-      setDifficultyLevel(DifficultyLevel.Advanced);
 
-      gtag("event", "level_end", {
-        level_name: DifficultyLevel.Intermediate,
-        success: true,
-      });
-      gtag("event", "level_start", {
-        level_name: DifficultyLevel.Advanced,
-      });
+      setDifficultyLevel(nextLevel);
     }
   }
 
@@ -83,12 +90,15 @@ function App() {
     if (userGuess === actualNote.noteName) {
       setCountOfCorrectGuesses(countOfCorrectGuesses + 1);
       setGameState(GameState.CorrectGuess);
-      checkForRemainingNotes();
 
       gtag("event", "select_content", {
         content_type: GameState.CorrectGuess,
         item_id: userGuess,
       });
+
+      if (remainingNotes[difficultyLevel].length === 0) {
+        advanceToNextLevel();
+      }
     } else {
       setGameState(GameState.IncorrectGuess);
       resetStateForDifficultyLevel();
@@ -106,25 +116,7 @@ function App() {
 
   function handleNextNote() {
     setGuessedNoteName("");
-    let newNote;
-    try {
-      newNote = getNextRandomNote();
-    } catch (err) {
-      setGameState(GameState.Finished);
-      resetStateForDifficultyLevel();
-
-      gtag("event", "level_end", {
-        level_name: DifficultyLevel.Advanced,
-        success: true,
-      });
-
-      gtag("event", "post_score", {
-        score: countOfCorrectGuesses,
-      });
-
-      return;
-    }
-    setActualNote(newNote);
+    setActualNote(getNextRandomNote());
     setGameState(GameState.WaitingForGuess);
   }
 

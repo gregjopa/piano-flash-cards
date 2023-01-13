@@ -89,7 +89,6 @@ test("complete the game after guessing all the notes", () => {
   fireEvent.change(noteSelectorElement, { target: { value: "F" } });
   fireEvent.click(screen.getByText(/Next Note/i));
   fireEvent.change(noteSelectorElement, { target: { value: "G" } });
-  fireEvent.click(screen.getByText(/Next Note/i));
 
   expect(
     screen.getByText(/Congrats! You completed the game/i)
