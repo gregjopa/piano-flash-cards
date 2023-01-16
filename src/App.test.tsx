@@ -73,10 +73,26 @@ test("score increases after a correct guess", () => {
 test("start over button dislays after an incorrect guess", () => {
   render(<App />);
   fireEvent.change(screen.getByLabelText("What note is it?"), {
+    // wrong note
     target: { value: "A" },
   });
   expect(screen.getByRole("alert")).toHaveTextContent("Incorrect");
   expect(screen.getByText(/Start Over/i)).toBeInTheDocument();
+});
+
+test("start over button click resets the score back to zero", () => {
+  render(<App />);
+  const noteSelectorElement = screen.getByLabelText("What note is it?");
+  fireEvent.change(noteSelectorElement, { target: { value: "D" } });
+  fireEvent.click(screen.getByText(/Next Note/i));
+  expect(screen.getByText(/Score: 1/i)).toBeInTheDocument();
+
+  fireEvent.change(noteSelectorElement, {
+    // wrong note
+    target: { value: "A" },
+  });
+  fireEvent.click(screen.getByText(/Start Over/i));
+  expect(screen.getByText(/Score: 0/i)).toBeInTheDocument();
 });
 
 test("complete the game after guessing all the notes", () => {
