@@ -73,7 +73,6 @@ export enum Octave {
 
 export enum GameState {
   NotStarted = "NotStarted",
-  GetNextNote = "GetNextNote",
   WaitingForGuess = "WaitingForGuess",
   CorrectGuess = "CorrectGuess",
   IncorrectGuess = "IncorrectGuess",
