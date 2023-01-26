@@ -1,6 +1,13 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import App from "./App";
+import {
+  defaultNote,
+  getBeginnerNotes,
+  getIntermediateNotes,
+  getAdvancedNotes,
+} from "./notes";
+import { NoteName, Clef, KeySignature, Octave } from "./constants";
 
 // mock <StaveNote /> since Vexflow fails to render with JSDOM
 jest.mock("./components/StaveNote", () => ({
@@ -14,47 +21,26 @@ jest.mock("./notes", () => {
 
   return {
     ...originalModule,
-    defaultNote: {
-      noteName: "D",
-      octave: 4,
-      clef: "treble",
-      keySignature: "C",
-    },
-    getBeginnerNotes() {
-      return [
-        {
-          noteName: "E",
-          octave: 4,
-          clef: "treble",
-          keySignature: "C",
-        },
-      ];
-    },
-    getIntermediateNotes() {
-      return [
-        {
-          noteName: "F",
-          octave: 4,
-          clef: "treble",
-          keySignature: "C",
-        },
-      ];
-    },
-    getAdvancedNotes() {
-      return [
-        {
-          noteName: "G",
-          octave: 4,
-          clef: "treble",
-          keySignature: "C",
-        },
-      ];
-    },
+    getBeginnerNotes: jest.fn(),
+    getIntermediateNotes: jest.fn(),
+    getAdvancedNotes: jest.fn(),
   };
 });
 
-// mock google analytics
-global.gtag = jest.fn();
+const mockedGetBeginnerNotes = jest.mocked(getBeginnerNotes);
+const mockedGetIntermediateNotes = jest.mocked(getIntermediateNotes);
+const mockedGetAdvancedNotes = jest.mocked(getAdvancedNotes);
+
+beforeEach(() => {
+  jest.clearAllMocks();
+
+  // mock google analytics
+  global.gtag = jest.fn();
+
+  mockedGetBeginnerNotes.mockReturnValue([]);
+  mockedGetIntermediateNotes.mockReturnValue([]);
+  mockedGetAdvancedNotes.mockReturnValue([]);
+});
 
 test("initial score is zero", () => {
   render(<App />);
@@ -64,7 +50,9 @@ test("initial score is zero", () => {
 test("score increases after a correct guess", () => {
   render(<App />);
   const noteSelectorElement = screen.getByLabelText("What note is it?");
-  fireEvent.change(noteSelectorElement, { target: { value: "D" } });
+  fireEvent.change(noteSelectorElement, {
+    target: { value: defaultNote.noteName },
+  });
   expect(screen.getByRole("alert")).toHaveTextContent("Correct!");
   expect(noteSelectorElement).toBeDisabled();
   expect(screen.getByText(/Score: 1/i)).toBeInTheDocument();
@@ -81,9 +69,20 @@ test("start over button dislays after an incorrect guess", () => {
 });
 
 test("start over button click resets the score back to zero", () => {
+  mockedGetBeginnerNotes.mockReturnValue([
+    {
+      noteName: NoteName.E,
+      octave: Octave.Four,
+      clef: Clef.Treble,
+      keySignature: KeySignature.C,
+    },
+  ]);
+
   render(<App />);
   const noteSelectorElement = screen.getByLabelText("What note is it?");
-  fireEvent.change(noteSelectorElement, { target: { value: "D" } });
+  fireEvent.change(noteSelectorElement, {
+    target: { value: defaultNote.noteName },
+  });
   fireEvent.click(screen.getByText(/Next Note/i));
   expect(screen.getByText(/Score: 1/i)).toBeInTheDocument();
 
@@ -96,9 +95,34 @@ test("start over button click resets the score back to zero", () => {
 });
 
 test("complete the game after guessing all the notes", () => {
+  const mockNote = {
+    noteName: NoteName.E,
+    octave: Octave.Four,
+    clef: Clef.Treble,
+    keySignature: KeySignature.C,
+  };
+
+  mockedGetBeginnerNotes.mockReturnValue([mockNote]);
+
+  mockedGetIntermediateNotes.mockReturnValue([
+    {
+      ...mockNote,
+      ...{ noteName: NoteName.F },
+    },
+  ]);
+
+  mockedGetAdvancedNotes.mockReturnValue([
+    {
+      ...mockNote,
+      ...{ noteName: NoteName.G },
+    },
+  ]);
+
   render(<App />);
   const noteSelectorElement = screen.getByLabelText("What note is it?");
-  fireEvent.change(noteSelectorElement, { target: { value: "D" } });
+  fireEvent.change(noteSelectorElement, {
+    target: { value: defaultNote.noteName },
+  });
   fireEvent.click(screen.getByText(/Next Note/i));
   fireEvent.change(noteSelectorElement, { target: { value: "E" } });
   fireEvent.click(screen.getByText(/Next Note/i));
