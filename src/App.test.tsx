@@ -144,6 +144,7 @@ test("render error displays the error boundary fallback component", () => {
 
   MockedStaveNote.mockImplementation(() => {
     throw new Error("failed to render the StaveNote component");
+    // eslint-disable-next-line no-unreachable
     return <div data-testid="mock-stave-note" />;
   });
 

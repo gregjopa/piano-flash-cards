@@ -26,7 +26,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint src/**/*.ts{,x}",
+    "lint": "eslint src --ext .ts,.tsx",
     "format": "prettier --write .",
     "coverage": "npm test -- --coverage --watchAll=false",
     "deploy": "npm run build && gh-pages -d build",
