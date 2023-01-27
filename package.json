@@ -30,7 +30,7 @@
     "format": "prettier --write .",
     "coverage": "npm test -- --coverage --watchAll=false",
     "deploy": "npm run build && gh-pages -d build",
-    "validate": "prettier --check . && npm run lint && npm run build && npm test -- --watchAll=false"
+    "validate": "prettier --check . && npm run lint && npm run build && npm run coverage"
   },
   "eslintConfig": {
     "extends": [
