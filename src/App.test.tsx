@@ -8,12 +8,13 @@ import {
   getAdvancedNotes,
 } from "./notes";
 import { NoteName, Clef, KeySignature, Octave } from "./constants";
+import { StaveNote } from "./components/StaveNote";
 
 // mock <StaveNote /> since Vexflow fails to render with JSDOM
 jest.mock("./components/StaveNote", () => ({
-  StaveNote: () => {
+  StaveNote: jest.fn(() => {
     return <div data-testid="mock-stave-note" />;
-  },
+  }),
 }));
 
 jest.mock("./notes", () => {
@@ -30,6 +31,7 @@ jest.mock("./notes", () => {
 const mockedGetBeginnerNotes = jest.mocked(getBeginnerNotes);
 const mockedGetIntermediateNotes = jest.mocked(getIntermediateNotes);
 const mockedGetAdvancedNotes = jest.mocked(getAdvancedNotes);
+const MockedStaveNote = jest.mocked(StaveNote);
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -134,4 +136,23 @@ test("complete the game after guessing all the notes", () => {
     screen.getByText(/Congrats! You completed the game/i)
   ).toBeInTheDocument();
   expect(screen.getByText(/Play Again/i)).toBeInTheDocument();
+});
+
+test("render error displays the error boundary fallback component", () => {
+  const consoleError = jest.spyOn(console, "error");
+  consoleError.mockImplementation(() => {});
+
+  MockedStaveNote.mockImplementation(() => {
+    throw new Error("failed to render the StaveNote component");
+    return <div data-testid="mock-stave-note" />;
+  });
+
+  render(<App />);
+
+  expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument();
+  expect(
+    screen.getByText(/failed to render the StaveNote component/i)
+  ).toBeInTheDocument();
+
+  consoleError.mockRestore();
 });
