@@ -3,9 +3,8 @@ import { Music } from "vexflow";
 import { NoteName, Octave } from "./constants";
 
 class AudioPlayer {
-  hasAudioSupport: boolean;
-  audioContext: AudioContext;
-  vexflowMusic: Music;
+  audioContext?: AudioContext;
+  vexflowMusic?: Music;
   samples?: {
     C2: AudioBuffer;
     C3: AudioBuffer;
@@ -18,15 +17,12 @@ class AudioPlayer {
   constructor() {
     this.audioContext = this.getCrossBrowserAudioContext();
     this.vexflowMusic = new Music();
-
     const audioExtension = this.getSupportedAudioExtension();
 
-    if (audioExtension === null) {
-      this.hasAudioSupport = false;
+    // check for support for the web audio api
+    if (!this.audioContext || !audioExtension) {
       return;
     }
-
-    this.hasAudioSupport = true;
 
     this.applyDecodeAudioDataPolyfill();
 
@@ -44,15 +40,19 @@ class AudioPlayer {
     });
   }
 
-  getCrossBrowserAudioContext(): AudioContext {
+  getCrossBrowserAudioContext(): AudioContext | undefined {
     const AudioContextCrossBrowser =
       window.AudioContext ||
       ((window as any).webkitAudioContext as AudioContext);
 
+    if (!AudioContextCrossBrowser) {
+      return;
+    }
+
     return new AudioContextCrossBrowser();
   }
 
-  getSupportedAudioExtension(): "mp3" | "ogg" | null {
+  getSupportedAudioExtension(): "mp3" | "ogg" | undefined {
     const audioElement = document.createElement("audio");
 
     if (audioElement.canPlayType("audio/mpeg")) {
@@ -62,11 +62,12 @@ class AudioPlayer {
     if (audioElement.canPlayType("audio/ogg")) {
       return "ogg";
     }
-
-    return null;
   }
 
   applyDecodeAudioDataPolyfill() {
+    if (!this.audioContext) {
+      return;
+    }
     // Polyfill for old callback-based syntax used in Safari
     if (this.audioContext.decodeAudioData.length !== 1) {
       const originalDecodeAudioData = this.audioContext.decodeAudioData.bind(
@@ -82,18 +83,18 @@ class AudioPlayer {
   loadSample(url: string): Promise<AudioBuffer> {
     return fetch(url)
       .then((response) => response.arrayBuffer())
-      .then((buffer) => this.audioContext.decodeAudioData(buffer));
+      .then((buffer) => this.audioContext!.decodeAudioData(buffer));
   }
 
   playNote(noteName: NoteName, octave: Omit<Octave, 1 | 7>) {
-    if (!this.hasAudioSupport || !this.samples) {
+    if (!this.audioContext || !this.samples) {
       return;
     }
 
     const source = this.audioContext.createBufferSource();
 
     // noteValue in semitones where C is zero
-    let noteValue = this.vexflowMusic.getNoteValue(noteName.toLowerCase());
+    let noteValue = this.vexflowMusic!.getNoteValue(noteName.toLowerCase());
     let sampleName = `C${octave}`;
 
     if (noteValue > 6) {
