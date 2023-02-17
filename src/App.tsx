@@ -2,6 +2,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import React, { useState } from "react";
 
 import { NoteName, GameState, DifficultyLevel } from "./constants";
+import { playNote } from "./audio";
 import {
   getBeginnerNotes,
   getIntermediateNotes,
@@ -116,7 +117,9 @@ function App() {
 
   function handleNextNote() {
     setGuessedNoteName("");
-    setActualNote(getNextRandomNote());
+    const nextNote = getNextRandomNote();
+    setActualNote(nextNote);
+    playNote(nextNote.noteName, nextNote.octave);
     setGameState(GameState.WaitingForGuess);
   }
 

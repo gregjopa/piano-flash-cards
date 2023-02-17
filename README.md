@@ -4,6 +4,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Audio
+
+The piano sounds are provided by [Salamander Grand Piano](https://archive.org/details/SalamanderGrandPianoV3) under the Creative Commons license.
+
 ## Available Scripts
 
 In the project directory, you can run:
