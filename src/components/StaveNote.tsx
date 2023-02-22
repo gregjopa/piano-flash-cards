@@ -1,15 +1,14 @@
 import React, { useCallback } from "react";
 import Vex from "vexflow";
 
-import { playNote } from "../audio";
-
 import type { Note } from "../notes";
 
 type StaveNoteProps = {
   note: Note;
+  onClick: () => void;
 };
 
-export const StaveNote: React.FC<StaveNoteProps> = ({ note }) => {
+export const StaveNote: React.FC<StaveNoteProps> = ({ note, onClick }) => {
   const vexflowRef = useCallback(
     (node: HTMLDivElement) => {
       if (node !== null) {
@@ -22,10 +21,7 @@ export const StaveNote: React.FC<StaveNoteProps> = ({ note }) => {
   );
 
   return (
-    <div
-      className="w-full overflow-x-auto"
-      onClick={() => playNote(note.noteName, note.octave)}
-    >
+    <div className="w-full overflow-x-auto" onClick={onClick}>
       <div ref={vexflowRef} />
     </div>
   );

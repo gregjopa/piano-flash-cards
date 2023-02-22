@@ -2,7 +2,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import React, { useState } from "react";
 
 import { NoteName, GameState, DifficultyLevel } from "./constants";
-import { playNote } from "./audio";
+import { AudioPlayer } from "./audio";
 import {
   getBeginnerNotes,
   getIntermediateNotes,
@@ -20,6 +20,8 @@ import { ErrorFallback } from "./components/ErrorFallback";
 import { Footer } from "./components/Footer";
 
 import "./App.css";
+
+const { playNote, playPowerChord, playDiminishedChord } = new AudioPlayer();
 
 function App() {
   const [actualNote, setActualNote] = useState<Note>(defaultNote);
@@ -91,6 +93,7 @@ function App() {
     if (userGuess === actualNote.noteName) {
       setCountOfCorrectGuesses(countOfCorrectGuesses + 1);
       setGameState(GameState.CorrectGuess);
+      playPowerChord(actualNote.noteName, actualNote.octave);
 
       gtag("event", "select_content", {
         content_type: GameState.CorrectGuess,
@@ -103,6 +106,7 @@ function App() {
     } else {
       setGameState(GameState.IncorrectGuess);
       resetStateForDifficultyLevel();
+      playDiminishedChord(actualNote.noteName, actualNote.octave);
 
       gtag("event", "select_content", {
         content_type: GameState.IncorrectGuess,
@@ -154,6 +158,10 @@ function App() {
     handleNextNote();
   }
 
+  function handleStaveNoteClick() {
+    playNote(actualNote.noteName, actualNote.octave);
+  }
+
   return (
     <>
       <div className="mx-auto h-[900px] max-w-2xl bg-slate-50 px-8 pb-8 text-lg text-slate-600 md:border-x md:border-b md:border-solid md:border-gray-500">
@@ -175,7 +183,7 @@ function App() {
               gameState === GameState.NotStarted
             }
           />
-          <StaveNote note={actualNote} />
+          <StaveNote note={actualNote} onClick={handleStaveNoteClick} />
           <div>Score: {countOfCorrectGuesses}</div>
 
           <ResultsPage
