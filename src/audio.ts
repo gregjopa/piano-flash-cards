@@ -1,10 +1,8 @@
-import { Music } from "vexflow";
-
-import { NoteName, Octave } from "./constants";
+import { Octave } from "./constants";
+import type { NoteValue } from "./notes";
 
 export class AudioPlayer {
   audioContext?: AudioContext;
-  vexflowMusic?: Music;
   samples?: {
     C2: AudioBuffer;
     C3: AudioBuffer;
@@ -20,7 +18,6 @@ export class AudioPlayer {
     this.playDiminishedChord = this.playDiminishedChord.bind(this);
 
     this.audioContext = this.getCrossBrowserAudioContext();
-    this.vexflowMusic = new Music();
     const audioExtension = this.getSupportedAudioExtension();
 
     // check for support for the web audio api
@@ -123,49 +120,37 @@ export class AudioPlayer {
     ];
   }
 
-  playNote(noteName: NoteName, octave: Omit<Octave, 1 | 7>) {
+  playNote(noteValue: NoteValue, octave: Omit<Octave, 1 | 7>) {
     if (!this.audioContext || !this.samples) {
       return;
     }
 
-    const noteValue = this.vexflowMusic!.getNoteValue(noteName.toLowerCase());
     this.playTone(...this.getBestSampleForNote(noteValue, octave as number));
   }
 
-  playPowerChord(noteName: NoteName, octave: Omit<Octave, 1 | 7>) {
-    if (!this.audioContext || !this.samples) {
-      return;
-    }
-
-    const rootValue = this.vexflowMusic!.getNoteValue(noteName.toLowerCase());
-
-    let fifthValue = rootValue + 7;
+  playPowerChord(noteValue: NoteValue, octave: Omit<Octave, 1 | 7>) {
+    let fifthValue = noteValue + 7;
     let fifthOctave = octave as number;
     let octaveFromRoot = (octave as number) + 1;
 
     if (fifthValue >= 12) {
-      fifthValue = fifthValue - 12;
-      fifthOctave = fifthOctave + 1;
+      fifthValue = noteValue + 7 - 12;
+      fifthOctave = (octave as number) + 1;
     }
 
-    if (octaveFromRoot === 7 && rootValue > 6) {
-      octaveFromRoot = octaveFromRoot - 2;
+    if (octaveFromRoot === 7 && noteValue > 6) {
+      octaveFromRoot = (octave as number) - 1;
     }
 
-    this.playTone(...this.getBestSampleForNote(rootValue, octave as number));
-    this.playTone(...this.getBestSampleForNote(fifthValue, fifthOctave));
-    this.playTone(...this.getBestSampleForNote(rootValue, octaveFromRoot));
+    this.playNote(noteValue, octave);
+    this.playNote(fifthValue as NoteValue, fifthOctave);
+    this.playNote(noteValue, octaveFromRoot);
   }
 
-  playDiminishedChord(noteName: NoteName, octave: Omit<Octave, 1 | 7>) {
-    if (!this.audioContext || !this.samples) {
-      return;
-    }
-
-    const rootValue = this.vexflowMusic!.getNoteValue(noteName.toLowerCase());
-    let minorThirdValue = rootValue + 3;
+  playDiminishedChord(noteValue: NoteValue, octave: Omit<Octave, 1 | 7>) {
+    let minorThirdValue = noteValue + 3;
     let minorThirdOctave = octave as number;
-    let diminishedFifthValue = rootValue + 6;
+    let diminishedFifthValue = noteValue + 6;
     let diminishedFifthOctave = octave as number;
 
     if (minorThirdValue >= 12) {
@@ -178,12 +163,8 @@ export class AudioPlayer {
       diminishedFifthOctave = diminishedFifthOctave + 1;
     }
 
-    this.playTone(...this.getBestSampleForNote(rootValue, octave as number));
-    this.playTone(
-      ...this.getBestSampleForNote(minorThirdValue, minorThirdOctave)
-    );
-    this.playTone(
-      ...this.getBestSampleForNote(diminishedFifthValue, diminishedFifthOctave)
-    );
+    this.playNote(noteValue, octave);
+    this.playNote(minorThirdValue as NoteValue, minorThirdOctave);
+    this.playNote(diminishedFifthValue as NoteValue, diminishedFifthOctave);
   }
 }
