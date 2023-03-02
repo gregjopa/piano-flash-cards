@@ -1,7 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import React, { useState } from "react";
 
-import { NoteName, GameState, DifficultyLevel } from "./constants";
+import { NoteName, Octave, GameState, DifficultyLevel } from "./constants";
 import { AudioPlayer } from "./audio";
 import {
   getBeginnerNotes,
@@ -10,6 +10,7 @@ import {
   pickRandomItemFromArray,
   defaultNote,
   Note,
+  NoteValue,
 } from "./notes";
 
 import { Header } from "./components/Header";
@@ -93,7 +94,7 @@ function App() {
     if (userGuess === actualNote.noteName) {
       setCountOfCorrectGuesses(countOfCorrectGuesses + 1);
       setGameState(GameState.CorrectGuess);
-      playPowerChord(actualNote.noteName, actualNote.octave);
+      playPowerChord(actualNote.noteValue, actualNote.octave);
 
       gtag("event", "select_content", {
         content_type: GameState.CorrectGuess,
@@ -106,7 +107,7 @@ function App() {
     } else {
       setGameState(GameState.IncorrectGuess);
       resetStateForDifficultyLevel();
-      playDiminishedChord(actualNote.noteName, actualNote.octave);
+      playDiminishedChord(actualNote.noteValue, actualNote.octave);
 
       gtag("event", "select_content", {
         content_type: GameState.IncorrectGuess,
@@ -123,7 +124,7 @@ function App() {
     setGuessedNoteName("");
     const nextNote = getNextRandomNote();
     setActualNote(nextNote);
-    playNote(nextNote.noteName, nextNote.octave);
+    playNote(nextNote.noteValue, nextNote.octave);
     setGameState(GameState.WaitingForGuess);
   }
 
@@ -159,7 +160,17 @@ function App() {
   }
 
   function handleStaveNoteClick() {
-    playNote(actualNote.noteName, actualNote.octave);
+    playNote(actualNote.noteValue, actualNote.octave);
+  }
+
+  function handleKeyboardClick({
+    noteValue,
+    octave,
+  }: {
+    noteValue: NoteValue;
+    octave: Octave;
+  }) {
+    playNote(noteValue, octave);
   }
 
   return (
@@ -191,6 +202,7 @@ function App() {
             actualNote={actualNote}
             onNextNote={handleNextNote}
             onStartOver={handleStartOver}
+            onKeyboardClick={handleKeyboardClick}
           />
         </ErrorBoundary>
       </div>

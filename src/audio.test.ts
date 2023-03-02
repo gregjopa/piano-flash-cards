@@ -1,8 +1,8 @@
 import { AudioContext } from "standardized-audio-context-mock";
-import { Music } from "vexflow";
 
 import { AudioPlayer } from "./audio";
 import { NoteName, Octave } from "./constants";
+import type { NoteValue } from "./notes";
 
 const mockedSamples = {
   C2: "C2",
@@ -14,7 +14,6 @@ const mockedSamples = {
 };
 
 let audioPlayer: AudioPlayer;
-const { getNoteValue } = new Music();
 const mockedPlayTone = jest.fn();
 
 beforeEach(() => {
@@ -34,19 +33,19 @@ beforeEach(() => {
 
 describe("playNote()", () => {
   test("C4", () => {
-    audioPlayer.playNote(NoteName.C, Octave.Four);
+    audioPlayer.playNote(0, Octave.Four);
     expect(mockedPlayTone.mock.calls[0]).toEqual([0, mockedSamples.C4]);
   });
 
   // B4 should use sample C5 for the best sound with pitch shifting
   test("B4", () => {
-    audioPlayer.playNote(NoteName.B, Octave.Four);
+    audioPlayer.playNote(11, Octave.Four);
     expect(mockedPlayTone.mock.calls[0]).toEqual([-1, mockedSamples.C5]);
   });
 
   // G6 should use sample C7 for the best sound with pitch shifting
   test("G6", () => {
-    audioPlayer.playNote(NoteName["G"], Octave.Six);
+    audioPlayer.playNote(7, Octave.Six);
     expect(mockedPlayTone.mock.calls[0]).toEqual([-5, mockedSamples.C7]);
   });
 });
@@ -55,25 +54,26 @@ describe("playPowerChord()", () => {
   test("C4", () => {
     const root = {
       name: NoteName.C,
+      originalValue: 0,
+      value: 0,
       octave: Octave.Four,
       sample: mockedSamples.C4,
-      value: 0,
     };
 
     // the fifth is 7 semitones away from the root note
     // the fifth of C is G (0 => 7)
     // and the closest sample is the octave above (7 - 12 = -5)
     const fifth = {
-      sample: mockedSamples.C5,
       value: -5,
+      sample: mockedSamples.C5,
     };
 
     const octaveFromRoot = {
-      sample: mockedSamples.C5,
       value: root.value,
+      sample: mockedSamples.C5,
     };
 
-    audioPlayer.playPowerChord(root.name, root.octave);
+    audioPlayer.playPowerChord(root.originalValue as NoteValue, root.octave);
 
     expect(mockedPlayTone.mock.calls[0]).toEqual([root.value, root.sample]);
     expect(mockedPlayTone.mock.calls[1]).toEqual([fifth.value, fifth.sample]);
@@ -86,22 +86,23 @@ describe("playPowerChord()", () => {
   test("A2", () => {
     const root = {
       name: NoteName.A,
+      originalValue: 9,
+      value: -3,
       octave: Octave.Two,
       sample: mockedSamples.C3,
-      value: -3,
     };
 
     const fifth = {
-      sample: mockedSamples.C3,
       value: 4,
+      sample: mockedSamples.C3,
     };
 
     const octaveFromRoot = {
-      sample: mockedSamples.C4,
       value: root.value,
+      sample: mockedSamples.C4,
     };
 
-    audioPlayer.playPowerChord(root.name, root.octave);
+    audioPlayer.playPowerChord(root.originalValue as NoteValue, root.octave);
 
     expect(mockedPlayTone.mock.calls[0]).toEqual([root.value, root.sample]);
     expect(mockedPlayTone.mock.calls[1]).toEqual([fifth.value, fifth.sample]);
@@ -114,22 +115,23 @@ describe("playPowerChord()", () => {
   test("D2", () => {
     const root = {
       name: NoteName.D,
+      originalValue: 2,
+      value: 2,
       octave: Octave.Two,
       sample: mockedSamples.C2,
-      value: 2,
     };
 
     const fifth = {
-      sample: mockedSamples.C3,
       value: -3,
+      sample: mockedSamples.C3,
     };
 
     const octaveFromRoot = {
-      sample: mockedSamples.C3,
       value: root.value,
+      sample: mockedSamples.C3,
     };
 
-    audioPlayer.playPowerChord(root.name, root.octave);
+    audioPlayer.playPowerChord(root.originalValue as NoteValue, root.octave);
 
     expect(mockedPlayTone.mock.calls[0]).toEqual([root.value, root.sample]);
     expect(mockedPlayTone.mock.calls[1]).toEqual([fifth.value, fifth.sample]);
@@ -142,22 +144,23 @@ describe("playPowerChord()", () => {
   test("G6", () => {
     const root = {
       name: NoteName.G,
+      originalValue: 7,
+      value: -5,
       octave: Octave.Six,
       sample: mockedSamples.C7,
-      value: -5,
     };
 
     const fifth = {
-      sample: mockedSamples.C7,
       value: 2,
+      sample: mockedSamples.C7,
     };
 
     const octaveFromRoot = {
-      sample: mockedSamples.C6,
       value: root.value,
+      sample: mockedSamples.C6,
     };
 
-    audioPlayer.playPowerChord(root.name, root.octave);
+    audioPlayer.playPowerChord(root.originalValue as NoteValue, root.octave);
 
     expect(mockedPlayTone.mock.calls[0]).toEqual([root.value, root.sample]);
     expect(mockedPlayTone.mock.calls[1]).toEqual([fifth.value, fifth.sample]);
@@ -170,22 +173,23 @@ describe("playPowerChord()", () => {
   test("B6", () => {
     const root = {
       name: NoteName.B,
+      originalValue: 11,
+      value: -1,
       octave: Octave.Six,
       sample: mockedSamples.C7,
-      value: -1,
     };
 
     const fifth = {
-      sample: mockedSamples.C7,
       value: 6,
+      sample: mockedSamples.C7,
     };
 
     const octaveFromRoot = {
-      sample: mockedSamples.C6,
       value: root.value,
+      sample: mockedSamples.C6,
     };
 
-    audioPlayer.playPowerChord(root.name, root.octave);
+    audioPlayer.playPowerChord(root.originalValue as NoteValue, root.octave);
 
     expect(mockedPlayTone.mock.calls[0]).toEqual([root.value, root.sample]);
     expect(mockedPlayTone.mock.calls[1]).toEqual([fifth.value, fifth.sample]);
@@ -200,22 +204,26 @@ describe("playDiminishedChord()", () => {
   test("C4 dim", () => {
     const root = {
       name: NoteName.C,
+      originalValue: 0,
+      value: 0,
       octave: Octave.Four,
       sample: mockedSamples.C4,
-      value: 0,
     };
 
     const minorThird = {
-      sample: mockedSamples.C4,
       value: 3,
+      sample: mockedSamples.C4,
     };
 
     const diminishedFifth = {
-      sample: mockedSamples.C4,
       value: 6,
+      sample: mockedSamples.C4,
     };
 
-    audioPlayer.playDiminishedChord(root.name, root.octave);
+    audioPlayer.playDiminishedChord(
+      root.originalValue as NoteValue,
+      root.octave
+    );
 
     expect(mockedPlayTone.mock.calls[0]).toEqual([root.value, root.sample]);
     expect(mockedPlayTone.mock.calls[1]).toEqual([
@@ -231,22 +239,26 @@ describe("playDiminishedChord()", () => {
   test("A2 dim", () => {
     const root = {
       name: NoteName.A,
+      originalValue: 9,
+      value: -3,
       octave: Octave.Two,
       sample: mockedSamples.C3,
-      value: -3,
     };
 
     const minorThird = {
-      sample: mockedSamples.C3,
       value: 0,
+      sample: mockedSamples.C3,
     };
 
     const diminishedFifth = {
-      sample: mockedSamples.C3,
       value: 3,
+      sample: mockedSamples.C3,
     };
 
-    audioPlayer.playDiminishedChord(root.name, root.octave);
+    audioPlayer.playDiminishedChord(
+      root.originalValue as NoteValue,
+      root.octave
+    );
 
     expect(mockedPlayTone.mock.calls[0]).toEqual([root.value, root.sample]);
     expect(mockedPlayTone.mock.calls[1]).toEqual([
@@ -262,22 +274,26 @@ describe("playDiminishedChord()", () => {
   test("D2 dim", () => {
     const root = {
       name: NoteName.D,
+      originalValue: 2,
+      value: 2,
       octave: Octave.Two,
       sample: mockedSamples.C2,
-      value: 2,
     };
 
     const minorThird = {
-      sample: mockedSamples.C2,
       value: 5,
+      sample: mockedSamples.C2,
     };
 
     const diminishedFifth = {
-      sample: mockedSamples.C3,
       value: -4,
+      sample: mockedSamples.C3,
     };
 
-    audioPlayer.playDiminishedChord(root.name, root.octave);
+    audioPlayer.playDiminishedChord(
+      root.originalValue as NoteValue,
+      root.octave
+    );
 
     expect(mockedPlayTone.mock.calls[0]).toEqual([root.value, root.sample]);
     expect(mockedPlayTone.mock.calls[1]).toEqual([
@@ -293,22 +309,26 @@ describe("playDiminishedChord()", () => {
   test("G6 dim", () => {
     const root = {
       name: NoteName.G,
+      originalValue: 7,
+      value: -5,
       octave: Octave.Six,
       sample: mockedSamples.C7,
-      value: -5,
     };
 
     const minorThird = {
-      sample: mockedSamples.C7,
       value: -2,
+      sample: mockedSamples.C7,
     };
 
     const diminishedFifth = {
-      sample: mockedSamples.C7,
       value: 1,
+      sample: mockedSamples.C7,
     };
 
-    audioPlayer.playDiminishedChord(root.name, root.octave);
+    audioPlayer.playDiminishedChord(
+      root.originalValue as NoteValue,
+      root.octave
+    );
 
     expect(mockedPlayTone.mock.calls[0]).toEqual([root.value, root.sample]);
     expect(mockedPlayTone.mock.calls[1]).toEqual([
@@ -324,22 +344,26 @@ describe("playDiminishedChord()", () => {
   test("B6 dim", () => {
     const root = {
       name: NoteName.B,
+      originalValue: 11,
+      value: -1,
       octave: Octave.Six,
       sample: mockedSamples.C7,
-      value: -1,
     };
 
     const minorThird = {
-      sample: mockedSamples.C7,
       value: 2,
+      sample: mockedSamples.C7,
     };
 
     const diminishedFifth = {
-      sample: mockedSamples.C7,
       value: 5,
+      sample: mockedSamples.C7,
     };
 
-    audioPlayer.playDiminishedChord(root.name, root.octave);
+    audioPlayer.playDiminishedChord(
+      root.originalValue as NoteValue,
+      root.octave
+    );
 
     expect(mockedPlayTone.mock.calls[0]).toEqual([root.value, root.sample]);
     expect(mockedPlayTone.mock.calls[1]).toEqual([

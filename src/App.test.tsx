@@ -6,6 +6,7 @@ import {
   getBeginnerNotes,
   getIntermediateNotes,
   getAdvancedNotes,
+  Note,
 } from "./notes";
 import { NoteName, Clef, KeySignature, Octave } from "./constants";
 import { StaveNote } from "./components/StaveNote";
@@ -74,6 +75,7 @@ test("start over button click resets the score back to zero", () => {
   mockedGetBeginnerNotes.mockReturnValue([
     {
       noteName: NoteName.E,
+      noteValue: 4,
       octave: Octave.Four,
       clef: Clef.Treble,
       keySignature: KeySignature.C,
@@ -99,10 +101,11 @@ test("start over button click resets the score back to zero", () => {
 test("complete the game after guessing all the notes", () => {
   const mockNote = {
     noteName: NoteName.E,
+    noteValue: 4,
     octave: Octave.Four,
     clef: Clef.Treble,
     keySignature: KeySignature.C,
-  };
+  } as Note;
 
   mockedGetBeginnerNotes.mockReturnValue([mockNote]);
 

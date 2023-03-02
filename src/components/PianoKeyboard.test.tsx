@@ -1,7 +1,13 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { PianoKeyboard } from "./PianoKeyboard";
 import { NoteName, Clef, KeySignature, Octave } from "../constants";
+
+const mockedClickHandler = jest.fn();
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 test("key of C Major with C as the active note", () => {
   render(
@@ -11,7 +17,9 @@ test("key of C Major with C as the active note", () => {
         octave: Octave.Four,
         clef: Clef.Treble,
         keySignature: KeySignature.C,
+        noteValue: 0,
       }}
+      onClick={mockedClickHandler}
     />
   );
 
@@ -32,6 +40,12 @@ test("key of C Major with C as the active note", () => {
 
   const activeNoteElement = screen.getByText(/C/i);
   expect(activeNoteElement.getAttribute("class")).toContain("font-bold");
+
+  fireEvent.click(screen.getByText(/C/i));
+  expect(mockedClickHandler.mock.calls[0][0]).toEqual({
+    noteValue: 0,
+    octave: 4,
+  });
 });
 
 test("key of F Major with Bb as the active note", () => {
@@ -42,7 +56,9 @@ test("key of F Major with Bb as the active note", () => {
         octave: Octave.Four,
         clef: Clef.Treble,
         keySignature: KeySignature.F,
+        noteValue: 10,
       }}
+      onClick={mockedClickHandler}
     />
   );
 
@@ -63,6 +79,12 @@ test("key of F Major with Bb as the active note", () => {
 
   const activeNoteElement = screen.getByText(/Bb/i);
   expect(activeNoteElement.getAttribute("class")).toContain("font-bold");
+
+  fireEvent.click(screen.getByText(/Bb/i));
+  expect(mockedClickHandler.mock.calls[0][0]).toEqual({
+    noteValue: 10,
+    octave: 4,
+  });
 });
 
 test("key of G Major with F# as the active note", () => {
@@ -73,7 +95,9 @@ test("key of G Major with F# as the active note", () => {
         octave: Octave.Four,
         clef: Clef.Treble,
         keySignature: KeySignature.G,
+        noteValue: 6,
       }}
+      onClick={mockedClickHandler}
     />
   );
 
@@ -94,6 +118,12 @@ test("key of G Major with F# as the active note", () => {
 
   const activeNoteElement = screen.getByText(/F#/i);
   expect(activeNoteElement.getAttribute("class")).toContain("font-bold");
+
+  fireEvent.click(screen.getByText(/F#/i));
+  expect(mockedClickHandler.mock.calls[0][0]).toEqual({
+    noteValue: 6,
+    octave: 4,
+  });
 });
 
 test("key of B Minor with B as the active note", () => {
@@ -104,7 +134,9 @@ test("key of B Minor with B as the active note", () => {
         octave: Octave.Four,
         clef: Clef.Treble,
         keySignature: KeySignature.Bm,
+        noteValue: 11,
       }}
+      onClick={mockedClickHandler}
     />
   );
 
@@ -125,4 +157,10 @@ test("key of B Minor with B as the active note", () => {
 
   const activeNoteElement = screen.getByText(/B/i);
   expect(activeNoteElement.getAttribute("class")).toContain("font-bold");
+
+  fireEvent.click(screen.getByText(/B/i));
+  expect(mockedClickHandler.mock.calls[0][0]).toEqual({
+    noteValue: 11,
+    octave: 4,
+  });
 });

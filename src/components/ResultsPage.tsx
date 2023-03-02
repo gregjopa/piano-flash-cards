@@ -3,14 +3,18 @@ import React from "react";
 import { Alert, AlertType } from "./Alert";
 import { Button } from "./Button";
 import { PianoKeyboard } from "./PianoKeyboard";
-import { GameState } from "../constants";
-import type { Note } from "../notes";
+import { GameState, Octave } from "../constants";
+import type { Note, NoteValue } from "../notes";
 
 type ResultsPageProps = {
   gameState: GameState;
   actualNote: Note;
   onNextNote: () => void;
   onStartOver: () => void;
+  onKeyboardClick: (noteOptions: {
+    noteValue: NoteValue;
+    octave: Octave;
+  }) => void;
 };
 
 export const ResultsPage: React.FC<ResultsPageProps> = ({
@@ -18,6 +22,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
   actualNote,
   onNextNote,
   onStartOver,
+  onKeyboardClick,
 }) => {
   function DisplayActualNote() {
     const { noteName, octave, keySignature } = actualNote;
@@ -74,7 +79,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
             Next Note
           </Button>
           <DisplayActualNote />
-          <PianoKeyboard activeNote={actualNote} />
+          <PianoKeyboard activeNote={actualNote} onClick={onKeyboardClick} />
         </>
       );
     case GameState.IncorrectGuess:
@@ -85,7 +90,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
             Start Over
           </Button>
           <DisplayActualNote />
-          <PianoKeyboard activeNote={actualNote} />
+          <PianoKeyboard activeNote={actualNote} onClick={onKeyboardClick} />
         </>
       );
     default:
