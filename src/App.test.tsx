@@ -8,7 +8,7 @@ import {
   getAdvancedNotes,
   Note,
 } from "./notes";
-import { NoteName, Clef, KeySignature, Octave } from "./constants";
+import { NoteName, Clef, KeySignature } from "./constants";
 import { StaveNote } from "./components/StaveNote";
 
 // mock <StaveNote /> since Vexflow fails to render with JSDOM
@@ -76,7 +76,7 @@ test("start over button click resets the score back to zero", () => {
     {
       noteName: NoteName.E,
       noteValue: 4,
-      octave: Octave.Four,
+      octave: 4,
       clef: Clef.Treble,
       keySignature: KeySignature.C,
     },
@@ -102,7 +102,7 @@ test("complete the game after guessing all the notes", () => {
   const mockNote = {
     noteName: NoteName.E,
     noteValue: 4,
-    octave: Octave.Four,
+    octave: 4,
     clef: Clef.Treble,
     keySignature: KeySignature.C,
   } as Note;

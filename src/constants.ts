@@ -60,17 +60,6 @@ export enum KeySignature {
   "A#m" = "A#m",
 }
 
-// 7 octaves for full sized piano with 88 keys
-export enum Octave {
-  One = 1,
-  Two = 2,
-  Three = 3,
-  Four = 4,
-  Five = 5,
-  Six = 6,
-  Seven = 7,
-}
-
 export enum GameState {
   NotStarted = "NotStarted",
   WaitingForGuess = "WaitingForGuess",

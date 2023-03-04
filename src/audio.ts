@@ -1,5 +1,4 @@
-import { Octave } from "./constants";
-import type { NoteValue } from "./notes";
+import type { NoteValue, Octave } from "./notes";
 
 export class AudioPlayer {
   audioContext?: AudioContext;
