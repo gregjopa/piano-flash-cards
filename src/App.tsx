@@ -1,7 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import React, { useState } from "react";
 
-import { NoteName, Octave, GameState, DifficultyLevel } from "./constants";
+import { NoteName, GameState, DifficultyLevel } from "./constants";
 import { AudioPlayer } from "./audio";
 import {
   getBeginnerNotes,
@@ -11,6 +11,7 @@ import {
   defaultNote,
   Note,
   NoteValue,
+  Octave,
 } from "./notes";
 
 import { Header } from "./components/Header";

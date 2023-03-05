@@ -3,8 +3,8 @@ import React from "react";
 import { Alert, AlertType } from "./Alert";
 import { Button } from "./Button";
 import { PianoKeyboard } from "./PianoKeyboard";
-import { GameState, Octave } from "../constants";
-import type { Note, NoteValue } from "../notes";
+import { GameState } from "../constants";
+import type { Note, NoteValue, Octave } from "../notes";
 
 type ResultsPageProps = {
   gameState: GameState;

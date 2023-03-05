@@ -1,9 +1,12 @@
 import { KeyManager, Music } from "vexflow";
 
-import { NoteName, Clef, KeySignature, Octave } from "./constants";
+import { NoteName, Clef, KeySignature } from "./constants";
 
 // 12 pitches
 export type NoteValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
+
+// 7 octaves for full sized piano with 88 keys
+export type Octave = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 export type Note = {
   noteName: NoteName;
@@ -16,7 +19,7 @@ export type Note = {
 export const defaultNote = {
   noteName: NoteName.C,
   noteValue: 0,
-  octave: Octave.Four,
+  octave: 4,
   clef: Clef.Treble,
   keySignature: KeySignature.C,
 } as Note;
@@ -65,7 +68,7 @@ export function getBeginnerNotes(): Note[] {
   const keySignature = KeySignature.C;
   const scaleNotes = keySignatureNotes[keySignature];
 
-  const notes = [];
+  const notes: Note[] = [];
 
   for (const { noteName, noteValue } of scaleNotes) {
     // filter out C4 since its the default first note
@@ -77,7 +80,7 @@ export function getBeginnerNotes(): Note[] {
       noteName,
       keySignature,
       noteValue,
-      octave: Octave.Four,
+      octave: 4,
       clef: Clef.Treble,
     });
   }
@@ -88,24 +91,29 @@ export function getBeginnerNotes(): Note[] {
 export function getIntermediateNotes(): Note[] {
   // F Major has 1 flat and G Major has 1 sharp
   const { C, F, G } = KeySignature;
-  const { Two, Three, Four, Five, Six } = Octave;
   const { Treble, Bass } = Clef;
 
   // avoid drawing notes that go off the stave (ex: treble clef octave 6)
   const cNotesPartialScale = keySignatureNotes[C].slice(0, 3);
+  type NoteConfig = {
+    key: KeySignature;
+    octave: Octave;
+    clef: Clef;
+    notes: ScaleNote[];
+  }[];
 
-  const noteConfig = [
-    { key: C, octave: Two, clef: Bass, notes: keySignatureNotes[C] },
-    { key: F, octave: Two, clef: Bass, notes: keySignatureNotes[F] },
-    { key: G, octave: Two, clef: Bass, notes: keySignatureNotes[G] },
-    { key: F, octave: Three, clef: Bass, notes: keySignatureNotes[F] },
-    { key: G, octave: Three, clef: Bass, notes: keySignatureNotes[G] },
-    { key: C, octave: Four, clef: Bass, notes: cNotesPartialScale },
-    { key: F, octave: Four, clef: Treble, notes: keySignatureNotes[F] },
-    { key: G, octave: Four, clef: Treble, notes: keySignatureNotes[G] },
-    { key: F, octave: Five, clef: Treble, notes: keySignatureNotes[F] },
-    { key: G, octave: Five, clef: Treble, notes: keySignatureNotes[G] },
-    { key: C, octave: Six, clef: Treble, notes: cNotesPartialScale },
+  const noteConfig: NoteConfig = [
+    { key: C, octave: 2, clef: Bass, notes: keySignatureNotes[C] },
+    { key: F, octave: 2, clef: Bass, notes: keySignatureNotes[F] },
+    { key: G, octave: 2, clef: Bass, notes: keySignatureNotes[G] },
+    { key: F, octave: 3, clef: Bass, notes: keySignatureNotes[F] },
+    { key: G, octave: 3, clef: Bass, notes: keySignatureNotes[G] },
+    { key: C, octave: 4, clef: Bass, notes: cNotesPartialScale },
+    { key: F, octave: 4, clef: Treble, notes: keySignatureNotes[F] },
+    { key: G, octave: 4, clef: Treble, notes: keySignatureNotes[G] },
+    { key: F, octave: 5, clef: Treble, notes: keySignatureNotes[F] },
+    { key: G, octave: 5, clef: Treble, notes: keySignatureNotes[G] },
+    { key: C, octave: 6, clef: Treble, notes: cNotesPartialScale },
   ];
 
   const uniqueNotes = new Set<String>();
@@ -146,7 +154,7 @@ export function getAdvancedNotes(): Note[] {
     KeySignature.Db,
     KeySignature.Gb,
   ];
-  const octaves = [Octave.Three, Octave.Four, Octave.Five];
+  const octaves: Octave[] = [3, 4, 5];
 
   const uniqueNotes = new Set<String>();
   const advancedNotes = [];
@@ -154,7 +162,7 @@ export function getAdvancedNotes(): Note[] {
   for (const key of advancedKeys) {
     for (const octave of octaves) {
       for (const { noteName, noteValue } of keySignatureNotes[key]) {
-        const clef = octave === Octave.Three ? Clef.Bass : Clef.Treble;
+        const clef = octave === 3 ? Clef.Bass : Clef.Treble;
         const uniqueNoteKey = `${clef}${noteName}${octave}`;
 
         // avoid duplicating notes with the same name, octave, and clef

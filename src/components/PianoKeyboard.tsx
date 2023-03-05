@@ -1,7 +1,6 @@
 import React, { Dispatch, MouseEvent } from "react";
 
-import { keySignatureNotes, Note, NoteValue } from "../notes";
-import { Octave } from "../constants";
+import { keySignatureNotes, Note, NoteValue, Octave } from "../notes";
 
 type PianoKeyboardProps = {
   activeNote: Note;

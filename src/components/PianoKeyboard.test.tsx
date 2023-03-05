@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { PianoKeyboard } from "./PianoKeyboard";
-import { NoteName, Clef, KeySignature, Octave } from "../constants";
+import { NoteName, Clef, KeySignature } from "../constants";
 
 const mockedClickHandler = jest.fn();
 
@@ -14,7 +14,7 @@ test("key of C Major with C as the active note", () => {
     <PianoKeyboard
       activeNote={{
         noteName: NoteName.C,
-        octave: Octave.Four,
+        octave: 4,
         clef: Clef.Treble,
         keySignature: KeySignature.C,
         noteValue: 0,
@@ -53,7 +53,7 @@ test("key of F Major with Bb as the active note", () => {
     <PianoKeyboard
       activeNote={{
         noteName: NoteName.Bb,
-        octave: Octave.Four,
+        octave: 4,
         clef: Clef.Treble,
         keySignature: KeySignature.F,
         noteValue: 10,
@@ -92,7 +92,7 @@ test("key of G Major with F# as the active note", () => {
     <PianoKeyboard
       activeNote={{
         noteName: NoteName["F#"],
-        octave: Octave.Four,
+        octave: 4,
         clef: Clef.Treble,
         keySignature: KeySignature.G,
         noteValue: 6,
@@ -131,7 +131,7 @@ test("key of B Minor with B as the active note", () => {
     <PianoKeyboard
       activeNote={{
         noteName: NoteName.B,
-        octave: Octave.Four,
+        octave: 4,
         clef: Clef.Treble,
         keySignature: KeySignature.Bm,
         noteValue: 11,
