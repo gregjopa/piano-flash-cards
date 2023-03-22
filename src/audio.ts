@@ -90,7 +90,14 @@ export class AudioPlayer {
     const source = this.audioContext!.createBufferSource();
     source.buffer = sample;
 
-    source.playbackRate.value = 2 ** (noteValue / 12);
+    // first try to use the detune property for pitch shifting
+    if (source.detune) {
+      source.detune.value = noteValue * 100;
+    } else {
+      // fallback to using playbackRate for pitch shifting
+      source.playbackRate.value = 2 ** (noteValue / 12);
+    }
+
     source.connect(this.audioContext!.destination);
 
     this.audioContext!.resume().then(() => {
