@@ -195,7 +195,14 @@ function App() {
               gameState === GameState.NotStarted
             }
           />
-          <StaveNote note={actualNote} onClick={handleStaveNoteClick} />
+          <StaveNote
+            note={actualNote}
+            onClick={handleStaveNoteClick}
+            shouldDisplayNoteName={
+              gameState !== GameState.WaitingForGuess &&
+              gameState !== GameState.NotStarted
+            }
+          />
           <div>Score: {countOfCorrectGuesses}</div>
 
           <ResultsPage
