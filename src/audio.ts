@@ -15,6 +15,7 @@ export class AudioPlayer {
     this.playNote = this.playNote.bind(this);
     this.playPowerChord = this.playPowerChord.bind(this);
     this.playDiminishedChord = this.playDiminishedChord.bind(this);
+    this.resumeAudioContext = this.resumeAudioContext.bind(this);
 
     this.audioContext = this.getCrossBrowserAudioContext();
     const audioExtension = this.getSupportedAudioExtension();
@@ -124,6 +125,12 @@ export class AudioPlayer {
       adjustedNoteValue,
       this.samples![`C${adjustedOctave}` as SampleName],
     ];
+  }
+
+  resumeAudioContext() {
+    if (this.audioContext && this.audioContext.state === "suspended") {
+      this.audioContext.resume();
+    }
   }
 
   playNote(noteValue: NoteValue, octave: Omit<Octave, 1 | 7>) {

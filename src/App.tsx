@@ -23,7 +23,8 @@ import { Footer } from "./components/Footer";
 
 import "./App.css";
 
-const { playNote, playPowerChord, playDiminishedChord } = new AudioPlayer();
+const { playNote, playPowerChord, playDiminishedChord, resumeAudioContext } =
+  new AudioPlayer();
 
 function App() {
   const [actualNote, setActualNote] = useState<Note>(defaultNote);
@@ -180,7 +181,10 @@ function App() {
 
   return (
     <>
-      <div className="mx-auto h-[900px] max-w-2xl bg-slate-50 px-8 pb-8 text-lg text-slate-600 md:border-x md:border-b md:border-solid md:border-gray-500">
+      <div
+        className="mx-auto h-[900px] max-w-2xl bg-slate-50 px-8 pb-8 text-lg text-slate-600 md:border-x md:border-b md:border-solid md:border-gray-500"
+        onClick={resumeAudioContext}
+      >
         <Header />
         <ErrorBoundary
           FallbackComponent={ErrorFallback}
