@@ -174,6 +174,10 @@ function App() {
     playNote(noteValue, octave);
   }
 
+  const waitingForGuess =
+    gameState === GameState.WaitingForGuess ||
+    gameState === GameState.NotStarted;
+
   return (
     <>
       <div className="mx-auto h-[900px] max-w-2xl bg-slate-50 px-8 pb-8 text-lg text-slate-600 md:border-x md:border-b md:border-solid md:border-gray-500">
@@ -186,22 +190,13 @@ function App() {
           <NoteSelector
             selectedNote={guessedNoteName}
             onNoteNameChange={handleGuess}
-            isDisabled={
-              gameState !== GameState.WaitingForGuess &&
-              gameState !== GameState.NotStarted
-            }
-            shouldFocus={
-              gameState === GameState.WaitingForGuess ||
-              gameState === GameState.NotStarted
-            }
+            isDisabled={!waitingForGuess}
+            shouldFocus={waitingForGuess}
           />
           <StaveNote
             note={actualNote}
             onClick={handleStaveNoteClick}
-            shouldDisplayNoteName={
-              gameState !== GameState.WaitingForGuess &&
-              gameState !== GameState.NotStarted
-            }
+            shouldDisplayNoteName={!waitingForGuess}
           />
           <div>Score: {countOfCorrectGuesses}</div>
 

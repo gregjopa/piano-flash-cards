@@ -89,7 +89,7 @@ function draw({
     .setLine(11)
     .setFont(
       '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-      12,
+      10,
       400
     );
 
