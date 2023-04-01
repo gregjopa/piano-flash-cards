@@ -5,7 +5,7 @@ export const Footer: React.FC = () => {
     <footer className="my-2 text-center">
       Built with{" "}
       <a
-        href="https://reactjs.org/"
+        href="https://react.dev/"
         className="text-blue-600 underline visited:text-purple-600 hover:text-blue-800"
       >
         React
