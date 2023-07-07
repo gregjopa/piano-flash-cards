@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
 import { AudioContext } from "standardized-audio-context-mock";
 
 import { AudioPlayer } from "./audio";
@@ -14,21 +15,23 @@ const mockedSamples = {
 };
 
 let audioPlayer: AudioPlayer;
-const mockedPlayTone = jest.fn();
+const mockedPlayTone = vi.fn();
 
 beforeEach(() => {
-  jest.clearAllMocks();
-
-  // @ts-ignore standardized-audio-context-mock is not a 100% match to spec
-  window.AudioContext = AudioContext;
-  window.HTMLMediaElement.prototype.canPlayType = () => "probably";
+  vi.stubGlobal("AudioContext", AudioContext);
   audioPlayer = new AudioPlayer();
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore mock sample values use type string instead of AudioBuffer
   audioPlayer.samples = mockedSamples;
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore mock private playTone() function
   audioPlayer.playTone = mockedPlayTone;
+});
+
+afterEach(() => {
+  vi.clearAllMocks();
 });
 
 describe("playNote()", () => {

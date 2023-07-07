@@ -21,8 +21,6 @@ import { ResultsPage } from "./components/ResultsPage";
 import { ErrorFallback } from "./components/ErrorFallback";
 import { Footer } from "./components/Footer";
 
-import "./App.css";
-
 const { playNote, playPowerChord, playDiminishedChord, resumeAudioContext } =
   new AudioPlayer();
 

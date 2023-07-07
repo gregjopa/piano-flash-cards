@@ -1,5 +1,7 @@
 import React from "react";
+import { test, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+
 import App from "./App";
 import {
   defaultNote,
@@ -12,37 +14,43 @@ import { NoteName, Clef, KeySignature } from "./constants";
 import { StaveNote } from "./components/StaveNote";
 
 // mock <StaveNote /> since Vexflow fails to render with JSDOM
-jest.mock("./components/StaveNote", () => ({
-  StaveNote: jest.fn(() => {
+vi.mock("./components/StaveNote", () => ({
+  StaveNote: vi.fn(() => {
     return <div data-testid="mock-stave-note" />;
   }),
 }));
 
-jest.mock("./notes", () => {
-  const originalModule = jest.requireActual("./notes");
+vi.mock("./notes", async () => {
+  const originalModule = await vi.importActual<typeof import("./notes")>(
+    "./notes"
+  );
 
   return {
     ...originalModule,
-    getBeginnerNotes: jest.fn(),
-    getIntermediateNotes: jest.fn(),
-    getAdvancedNotes: jest.fn(),
+    getBeginnerNotes: vi.fn(),
+    getIntermediateNotes: vi.fn(),
+    getAdvancedNotes: vi.fn(),
   };
 });
 
-const mockedGetBeginnerNotes = jest.mocked(getBeginnerNotes);
-const mockedGetIntermediateNotes = jest.mocked(getIntermediateNotes);
-const mockedGetAdvancedNotes = jest.mocked(getAdvancedNotes);
-const MockedStaveNote = jest.mocked(StaveNote);
+const mockedGetBeginnerNotes = vi.mocked(getBeginnerNotes);
+const mockedGetIntermediateNotes = vi.mocked(getIntermediateNotes);
+const mockedGetAdvancedNotes = vi.mocked(getAdvancedNotes);
+const MockedStaveNote = vi.mocked(StaveNote);
 
 beforeEach(() => {
-  jest.clearAllMocks();
-
   // mock google analytics
-  global.gtag = jest.fn();
+  vi.stubGlobal("gtag", vi.fn());
 
   mockedGetBeginnerNotes.mockReturnValue([]);
   mockedGetIntermediateNotes.mockReturnValue([]);
   mockedGetAdvancedNotes.mockReturnValue([]);
+});
+
+afterEach(() => {
+  document.body.innerHTML = "";
+  vi.clearAllMocks();
+  vi.unstubAllGlobals();
 });
 
 test("initial score is zero", () => {
@@ -142,7 +150,8 @@ test("complete the game after guessing all the notes", () => {
 });
 
 test("render error displays the error boundary fallback component", () => {
-  const consoleError = jest.spyOn(console, "error");
+  const consoleError = vi.spyOn(console, "error");
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   consoleError.mockImplementation(() => {});
 
   MockedStaveNote.mockImplementation(() => {
