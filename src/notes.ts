@@ -116,7 +116,7 @@ export function getIntermediateNotes(): Note[] {
     { key: C, octave: 6, clef: Treble, notes: cNotesPartialScale },
   ];
 
-  const uniqueNotes = new Set<String>();
+  const uniqueNotes = new Set<string>();
   const intermediateNotes = [];
 
   for (const { key, octave, clef, notes } of noteConfig) {
@@ -156,7 +156,7 @@ export function getAdvancedNotes(): Note[] {
   ];
   const octaves: Octave[] = [3, 4, 5];
 
-  const uniqueNotes = new Set<String>();
+  const uniqueNotes = new Set<string>();
   const advancedNotes = [];
 
   for (const key of advancedKeys) {

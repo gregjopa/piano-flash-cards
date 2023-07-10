@@ -32,7 +32,7 @@ export class AudioPlayer {
     Promise.all(
       fileNames.map((fileName) =>
         this.loadSample(
-          `${process.env.PUBLIC_URL}/audio/${fileName}.${audioExtension}`
+          `${import.meta.env.BASE_URL}/audio/${fileName}.${audioExtension}`
         )
       )
     ).then((audioBuffers) => {
@@ -44,6 +44,7 @@ export class AudioPlayer {
   private getCrossBrowserAudioContext(): AudioContext | undefined {
     const AudioContextCrossBrowser =
       window.AudioContext ||
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ((window as any).webkitAudioContext as AudioContext);
 
     if (!AudioContextCrossBrowser) {
@@ -82,13 +83,20 @@ export class AudioPlayer {
   }
 
   private loadSample(url: string): Promise<AudioBuffer> {
-    return fetch(url)
-      .then((response) => response.arrayBuffer())
-      .then((buffer) => this.audioContext!.decodeAudioData(buffer));
+    return (
+      fetch(url)
+        .then((response) => response.arrayBuffer())
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        .then((buffer) => this.audioContext!.decodeAudioData(buffer))
+    );
   }
 
   private playTone(noteValue: number, sample: AudioBuffer) {
-    const source = this.audioContext!.createBufferSource();
+    if (!this.audioContext) {
+      return;
+    }
+
+    const source = this.audioContext.createBufferSource();
     source.buffer = sample;
 
     // first try to use the detune property for pitch shifting
@@ -99,9 +107,9 @@ export class AudioPlayer {
       source.playbackRate.value = 2 ** (noteValue / 12);
     }
 
-    source.connect(this.audioContext!.destination);
+    source.connect(this.audioContext.destination);
 
-    this.audioContext!.resume().then(() => {
+    this.audioContext.resume().then(() => {
       source.start(0);
     });
   }
@@ -123,6 +131,7 @@ export class AudioPlayer {
 
     return [
       adjustedNoteValue,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.samples![`C${adjustedOctave}` as SampleName],
     ];
   }

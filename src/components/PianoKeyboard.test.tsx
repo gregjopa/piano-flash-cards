@@ -1,12 +1,14 @@
 import React from "react";
+import { test, expect, afterEach, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { PianoKeyboard } from "./PianoKeyboard";
 import { NoteName, Clef, KeySignature } from "../constants";
 
-const mockedClickHandler = jest.fn();
+const mockedClickHandler = vi.fn();
 
-beforeEach(() => {
-  jest.clearAllMocks();
+afterEach(() => {
+  document.body.innerHTML = "";
+  vi.clearAllMocks();
 });
 
 test("key of C Major with C as the active note", () => {

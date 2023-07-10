@@ -1,42 +1,21 @@
 {
   "name": "piano-flash-cards",
   "version": "0.1.0",
-  "homepage": "https://gregjopa.github.io/piano-flash-cards",
-  "author": "Greg Jopa <grjopa@gmail.com>",
-  "license": "MIT",
   "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.10",
-    "@types/react": "^18.0.26",
-    "@types/react-dom": "^18.0.9",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-error-boundary": "^3.1.4",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.9.4",
-    "vexflow": "^4.1.0",
-    "web-vitals": "^3.1.1"
-  },
+  "homepage": "https://gregjopa.github.io/piano-flash-cards",
+  "license": "MIT",
+  "author": "Greg Jopa <grjopa@gmail.com>",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint src --ext .ts,.tsx",
+    "build": "vite build",
+    "coverage": "npm test -- --coverage --watch=false",
+    "deploy": "npm run build && gh-pages -d dist",
     "format": "prettier --write .",
-    "coverage": "npm test -- --coverage --watchAll=false",
-    "deploy": "npm run build && gh-pages -d build",
-    "validate": "prettier --check . && npm run lint && npm run build && npm run coverage"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "lint": "eslint src --ext .ts,.tsx",
+    "preview": "vite preview",
+    "start": "vite",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "validate": "prettier --check . && npm run typecheck && npm run lint && npm run build && npm run coverage"
   },
   "browserslist": {
     "production": [
@@ -48,15 +27,40 @@
       "last 1 safari version"
     ]
   },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-error-boundary": "^3.1.4",
+    "typescript": "^4.9.4",
+    "vexflow": "^4.1.0",
+    "web-vitals": "^3.1.1"
+  },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
     "@types/gtag.js": "^0.0.12",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.10",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
+    "@vitejs/plugin-react": "^4.0.2",
+    "@vitest/coverage-v8": "^0.33.0",
     "autoprefixer": "^10.4.13",
+    "eslint": "^8.44.0",
+    "eslint-plugin-react": "^7.32.2",
     "gh-pages": "^4.0.0",
+    "jsdom": "^22.1.0",
     "postcss": "^8.4.20",
     "prettier": "^2.8.1",
     "prettier-plugin-tailwindcss": "^0.2.1",
     "standardized-audio-context-mock": "^9.6.12",
-    "tailwindcss": "^3.2.4"
+    "tailwindcss": "^3.2.4",
+    "vite": "^4.4.1",
+    "vite-tsconfig-paths": "^4.2.0",
+    "vitest": "^0.33.0"
   }
 }
